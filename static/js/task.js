@@ -29,7 +29,7 @@ var instructionPages = [ // add as a list as many pages as you like
 	"instructions/instruct-3.html",
 	"instructions/instruct-ready.html"
 ];
-var response, i = 0, theta = 0, moving, rotDelta, rotDir, aframe, responseDiv, dotColordotColorFlipped, redC, greenC, respCorrect, start, end, rxnTime, radius_jitter;
+
 /********************
 * HTML manipulation
 *
@@ -45,7 +45,7 @@ function degToRad(degrees) {
 }
 
 // putting the class here just so that autocomplete can reference it
-function stimulus(stim_name, obj_file_name, obj_tex_file_name, obj_mtl_shin, obj_rot_init_ang, obj_rot_max_ang, obj_rot_max_speed, obj_rot_init_dir, obj_good_size, obj_size, obj_center, dots_gr_xyz, dots_onset_degree, dots_r_radius, dots_l_radius) {
+function stimulus(stim_name, obj_file_name, obj_tex_file_name, obj_mtl_shin, obj_rot_init_ang, obj_rot_max_ang, obj_rot_max_speed, obj_rot_init_dir, obj_good_size, obj_size, obj_center, dots_gr_xyz, dots_onset_degree, dots_g_radius, dots_r_radius) {
 	
 	if (obj_rot_max_ang == 0) obj_rot_max_ang = 30;
 	if (obj_rot_max_speed == 0) obj_rot_max_speed = 2.0;
@@ -62,22 +62,26 @@ function stimulus(stim_name, obj_file_name, obj_tex_file_name, obj_mtl_shin, obj
 		distance: 20.0,
 		file_name: obj_file_name,
 		tex_file_name: obj_tex_file_name,
-		tex_size: 1024,
 		mtl_shin: obj_mtl_shin,
 		rot_num_change_dir: 3,
 		center: obj_center,
-		size: obj_size
+		size: obj_size,
+		scaling: 1
 	};
 
 	this.dots = {
-		gr_xyz: dots_gr_xyz,
+		color_flipped: 0,
+		g_pos: [dots_gr_xyz[0], dots_gr_xyz[1], dots_gr_xyz[2]],
+		r_pos: [dots_gr_xyz[3], dots_gr_xyz[4], dots_gr_xyz[5]],
 		r_radius: dots_r_radius,
-		r_tex_size: 16,
 		r_tex_file_name: 'dotRed.jpg',
-		l_tex_size: 16,
-		l_radius: dots_l_radius,
-		l_tex_file_name: 'dotGreen.jpg',
-		onset_degree: degToRad(dots_onset_degree)
+		g_radius: dots_g_radius,
+		g_tex_file_name: 'dotGreen.jpg',
+		onset_degree: degToRad(dots_onset_degree), 
+		jitter_on: 1,
+		jitter_amount: 0.1,
+		g_jitter: 0,
+		r_jitter: 0
 	};
 }
 
@@ -92,7 +96,9 @@ var ThreeDExperiment = function() {
 	var webGLRenderer = new THREE.WebGLRenderer();
 	var listening = false;
 
-    var trialNum = 0, scene, pivot, mesh, redD, greenD, redMat, greenMat, camera, num_change_dir, framerate = 10, currStim, scaling;
+    var trialNum = 0, scene, objGroup, stimMesh, redDotMesh, greenDotMesh, redMat, greenMat, camera, num_change_dir, framerate = 10, currStim;
+    var response, theta = 0, moving, rotDelta, rotDir, aframe, responseDiv, redDotCenter, greenDotCenter, respCorrect, reactionTimeStart, reactionTimeEnd;
+    
     var lightPos = [], spotLights = [], ambLight;
 
 
@@ -205,7 +211,7 @@ var ThreeDExperiment = function() {
     	//currStim = stimList[Math.floor(Math.random() * stimList.length)];
 		currStim = BananaExtremesRIGHT;
 
-		scaling = currStim.obj.good_size/currStim.obj.size;
+		currStim.obj.scaling = currStim.obj.good_size/currStim.obj.size;
 		rotDir = currStim.obj.rot_init_dir;
 
 		theta = 0;
@@ -290,7 +296,7 @@ var ThreeDExperiment = function() {
     					theta = currStim.obj.rot_max_ang;
     					moving = false;
     					listening = true;
-    					start = Date();
+    					reactionTimeStart = new Date();
     				} else {
     					// changing direction	
     					num_change_dir++;
@@ -323,7 +329,7 @@ var ThreeDExperiment = function() {
     					theta = -currStim.obj.rot_max_ang;
     					moving = false;
     					listening = true;
-    					start = Date();
+    					reactionTimeStart = new Date();
     				} else {
     					// changing direction	
     					num_change_dir++;
@@ -340,7 +346,7 @@ var ThreeDExperiment = function() {
 
     function createScene() {
 
-        pivot = new THREE.Group();
+        objGroup = new THREE.Group();
         loader = new THREE.OBJLoader();
 
         loader.load("../static/images/objects/" + currStim.obj.file_name, function (object) {
@@ -355,24 +361,24 @@ var ThreeDExperiment = function() {
             });
 
             // add texture
-            mesh = createMesh(object.children[0].geometry, currStim.obj.tex_file_name);
+            stimMesh = createMesh(object.children[0].geometry, currStim.obj.tex_file_name);
             
             // scale to a good size
-			mesh.scale.set(scaling, scaling, scaling);
-			pivot.add( mesh );
-			mesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
+			stimMesh.scale.set(currStim.obj.scaling, currStim.obj.scaling, currStim.obj.scaling);
+			objGroup.add( stimMesh );
+			stimMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
 				-currStim.obj.center[0], -currStim.obj.center[1], -currStim.obj.center[2]));
 
-            scene.add( pivot );
+            scene.add( objGroup );
         });
 
-        // add dots to pivot before we start transforming the object since that is easier
+        // add dots to objGroup before we start transforming the object since that is easier
         // than trying to figure out the transformations to position the dots correctly
         // at a later time
         addDots();
                 
         // rotate group - object with dots
-		pivot.rotation.y = currStim.obj.rot_init_ang;
+		objGroup.rotation.y = currStim.obj.rot_init_ang;
 		
 		// draw line for rotation reference
 		var lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
@@ -380,7 +386,7 @@ var ThreeDExperiment = function() {
 		lineGeometry.vertices.push(new THREE.Vector3(0, -100, 0));
 		lineGeometry.vertices.push(new THREE.Vector3(0, 100, 0));
 		var Line = new THREE.Line(lineGeometry,lineMaterial);
-		pivot.add(Line);
+		objGroup.add(Line);
     }
 
     function addLights() {
@@ -406,9 +412,13 @@ var ThreeDExperiment = function() {
 
 	function addDots(){
         // red
-        radius_jitter = 0.25*currStim.dots.r_radius;
-        var redGeo = new THREE.SphereGeometry(currStim.dots.r_radius + Math.random()*radius_jitter,16,16);
-        var textureR = THREE.ImageUtils.loadTexture("../static/images/objects/" + currStim.dots.r_tex_file_name)
+        if (currStim.dots.jitter_on) {
+        	currStim.dots.g_jitter = Math.random()*currStim.dots.jitter_amount*currStim.dots.g_radius;
+        	currStim.dots.r_jitter = Math.random()*currStim.dots.jitter_amount*currStim.dots.r_radius;
+        }
+        
+        var redGeo = new THREE.SphereGeometry(currStim.dots.r_radius + currStim.dots.r_jitter, 24, 24);
+        var textureR = THREE.ImageUtils.loadTexture("../static/images/objects/" + currStim.dots.r_tex_file_name);
 		redMat = new THREE.MeshPhongMaterial({ 
 	    	color: 0x999999, 
 	    	specular: 0x050505,
@@ -416,18 +426,18 @@ var ThreeDExperiment = function() {
 	    	//opacity: 0, transparent: true
     	});
 		redMat.map = textureR;
-		redD = new THREE.Mesh(redGeo, redMat);
+		redDotMesh = new THREE.Mesh(redGeo, redMat);
 		
-		redD.scale.set(scaling, scaling, scaling);
-		redD.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
+		redDotMesh.scale.set(currStim.obj.scaling, currStim.obj.scaling, currStim.obj.scaling);
+		redDotMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
 			-currStim.obj.center[0], -currStim.obj.center[1], -currStim.obj.center[2]));
-		redD.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
-			currStim.dots.gr_xyz[3], currStim.dots.gr_xyz[4], currStim.dots.gr_xyz[5]));
-        pivot.add(redD);
+		redDotMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
+			currStim.dots.r_pos[0], currStim.dots.r_pos[1], currStim.dots.r_pos[2]));
+        objGroup.add(redDotMesh);
         
         // green        
-		var greenGeo = new THREE.SphereGeometry(currStim.dots.l_radius + Math.random()*radius_jitter,16,16);
-        var textureG = THREE.ImageUtils.loadTexture("../static/images/objects/" + currStim.dots.l_tex_file_name)
+		var greenGeo = new THREE.SphereGeometry(currStim.dots.g_radius + currStim.dots.g_jitter, 24, 24);
+        var textureG = THREE.ImageUtils.loadTexture("../static/images/objects/" + currStim.dots.g_tex_file_name);
 		greenMat = new THREE.MeshPhongMaterial({ 
         	color: 0x999999, 
 	    	specular: 0x050505,
@@ -435,18 +445,18 @@ var ThreeDExperiment = function() {
 	    	//opacity: 0, transparent: true
     	});
 		greenMat.map = textureG;
-		greenD = new THREE.Mesh(greenGeo, greenMat);
-		greenD.scale.set(scaling, scaling, scaling);
-		greenD.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
+		greenDotMesh = new THREE.Mesh(greenGeo, greenMat);
+		greenDotMesh.scale.set(currStim.obj.scaling, currStim.obj.scaling, currStim.obj.scaling);
+		greenDotMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
 			-currStim.obj.center[0], -currStim.obj.center[1], -currStim.obj.center[2]));
-		greenD.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
-			currStim.dots.gr_xyz[0], currStim.dots.gr_xyz[1], currStim.dots.gr_xyz[2]));
-        pivot.add( greenD );
+		greenDotMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
+			currStim.dots.g_pos[0], currStim.dots.g_pos[1], currStim.dots.g_pos[2]));
+        objGroup.add( greenDotMesh );
         
         //randomize dot colors
         //dotColorFlipped: 0 if same, 1 if dotColorFlipped
-        dotColorFlipped = Math.round(Math.random())
-        if (dotColorFlipped == 1) {
+        currStim.dots.color_flipped = Math.round(Math.random())
+        if (currStim.dots.color_flipped == 1) {
         	redMat.map = textureG;
         	greenMat.map = textureR;
         }
@@ -460,8 +470,48 @@ var ThreeDExperiment = function() {
 		// - the actual positions of each sphere in 3D
 		// - whether response was correct or not - to figure this out we would need 
 		//		the previous 2 anyway
-		psiturk.recordTrialData([properties, rxnTime, response, redC, greenC, respCorrect])
-		psiturk.saveData();
+		var redPos, greenPos;
+		if (currStim.dots.color_flipped) {
+			redPos = currStim.dots.g_pos;
+			greenPos = currStim.dots.r_pos;
+		} else {
+			redPos = currStim.dots.r_pos;
+			greenPos = currStim.dots.g_pos;
+		}
+		
+		psiTurk.recordTrialData({'phase':'trials', 
+			'trial':trialNum,
+			'stim_name':currStim.name, 
+			'stim_light_color':currStim.light,
+			'stim_rot_init_ang':currStim.obj.rot_init_ang, 
+			'stim_rot_init_dir':currStim.obj.rot_init_dir, 
+			'stim_rot_max_speed':currStim.obj.rot_max_speed,
+			'stim_rot_min_speed':currStim.obj.rot_min_speed,
+			'stim_rot_max_ang':currStim.obj.rot_max_ang,
+			'stim_good_size':currStim.obj.good_size,
+			'stim_distance':currStim.obj.distance,
+			'stim_file_name':currStim.obj.file_name,
+			'stim_tex_file_name':currStim.obj.tex_file_name,
+			'stim_mtl_shin':currStim.obj.mtl_shin,
+			'stim_rot_num_change_dir':currStim.obj.rot_num_change_dir,
+			'stim_center':currStim.obj.center,
+			'stim_size':currStim.obj.size,
+			'stim_scaling':currStim.obj.scaling,
+			'dots_green_pos':greenPos,
+			'dots_red_pos':redPos,
+			'dots_color_flipped':currStim.dots.color_flipped,
+			'dots_green_radius':currStim.dots.g_radius,
+			'dots_red_radius':currStim.dots.r_radius,
+			'dots_jitter_on':currStim.dots.jitter_on,
+			'dots_green_jitter':currStim.dots.g_jitter,
+			'dots_red_jitter':currStim.dots.r_jitter,
+			'dots_onset_degree':currStim.dots.onset_degree,
+			'resp_given':response,
+			'resp_correct':respCorrect,
+			'resp_reaction_time':reactionTimeEnd.getTime()-reactionTimeStart.getTime()
+		});
+
+		psiTurk.saveData();
 	}
 
 	var next = function() {
@@ -499,9 +549,9 @@ var ThreeDExperiment = function() {
 		}
 		if (response.length>0) {
 			listening = false;
-			end = Date();
-			rxnTime = end-start;
+			reactionTimeEnd = new Date();
 			feedback();
+			storeData();
 		}
 	};
 
@@ -542,7 +592,7 @@ var ThreeDExperiment = function() {
 		
 		if (moving) {
 			// perform the actual rotations
-    		pivot.rotation.y = currStim.obj.rot_init_ang + theta;
+    		objGroup.rotation.y = currStim.obj.rot_init_ang + theta;
     		
             // render using requestAnimationFrame
             aframe = requestAnimationFrame(render);
@@ -552,22 +602,23 @@ var ThreeDExperiment = function() {
     };
         
 	var feedback = function() {
+    	respCorrect = false;
+
 	    // figure out if response was correct
 	    //use dotColorFlipped variable to determine the color/position relationship
-	    if (dotColorFlipped == 0) {
-			redC = getCenterInWorldCoord(redD);
-			greenC = getCenterInWorldCoord(greenD);
-        	respCorrect = false;
+	    if (currStim.dots.color_flipped == 0) {
+			redDotCenter = getCenterInWorldCoord(redDotMesh);
+			greenDotCenter = getCenterInWorldCoord(greenDotMesh);
+
+	    } else {
+	    	redDotCenter = getCenterInWorldCoord(greenDotMesh);
+	    	greenDotCenter = getCenterInWorldCoord(redDotMesh);
 	    }
-	    if (dotColorFlipped == 1) {
-	    	redC = getCenterInWorldCoord(greenD);
-	    	greenC = getCenterInWorldCoord(redD);
-	    	respCorrect = false;
-	    }
+	    
 	    if (response == 'red') {
-	        if (redC.z > greenC.z) respCorrect = true;
+	        if (redDotCenter.z > greenDotCenter.z) respCorrect = true;
 	    } else if (response == 'green') {
-	        if (redC.z < greenC.z) respCorrect = true;
+	        if (redDotCenter.z < greenDotCenter.z) respCorrect = true;
 	    }
 	    
 	    if (respCorrect) {
@@ -577,7 +628,7 @@ var ThreeDExperiment = function() {
             incorrectAudio.play();
 	        textI();
 	    }
-	    
+	   
 	    setTimeout(next,3000);
 	};
 	
