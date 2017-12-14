@@ -16,9 +16,16 @@ var pages = [
 	"instructions/instruct-1.html",
 	"instructions/instruct-2.html",
 	"instructions/instruct-3.html",
+	"instructions/instruct-4.html",
+	"instructions/instruct-5.html",
 	"instructions/instruct-ready.html",
+	"instructions/instruct-6.html",
+	"instructions/instruct-7.html",
+	"instructions/instruct-ready2.html",
 	"stage.html",
-	"postquestionnaire.html"
+	"getRuleA.html",
+	"getRuleB.html",
+	"theend.html"
 ];
 
 psiTurk.preloadPages(pages);
@@ -27,8 +34,17 @@ var instructionPages = [ // add as a list as many pages as you like
 	"instructions/instruct-1.html",
 	"instructions/instruct-2.html",
 	"instructions/instruct-3.html",
+	"instructions/instruct-4.html",
+	"instructions/instruct-5.html",
 	"instructions/instruct-ready.html"
 ];
+
+var instructionPages2 = [
+	"instructions/instruct-6.html",
+	"instructions/instruct-7.html",
+	"instructions/instruct-ready2.html"
+	];
+
 
 /********************
 * HTML manipulation
@@ -55,7 +71,8 @@ function stimulus(stim_name, obj_file_name, obj_tex_file_name, obj_mtl_shin, obj
 	this.obj = {
 		rot_init_ang: degToRad(obj_rot_init_ang),
 		rot_init_dir: obj_rot_init_dir,
-		rot_max_speed: degToRad(obj_rot_max_speed), 
+		//rot_max_speed: degToRad(obj_rot_max_speed), 
+		rot_max_speed: degToRad(5),  // hard coding it to go faster during debug
 		rot_min_speed: degToRad(0.2), 
 		rot_max_ang: degToRad(obj_rot_max_ang),
 		good_size: obj_good_size,
@@ -63,7 +80,7 @@ function stimulus(stim_name, obj_file_name, obj_tex_file_name, obj_mtl_shin, obj
 		file_name: obj_file_name,
 		tex_file_name: obj_tex_file_name,
 		mtl_shin: obj_mtl_shin,
-		rot_num_change_dir: 3,
+		rot_num_change_dir: 2,
 		center: obj_center,
 		size: obj_size,
 		scaling: 1
@@ -91,12 +108,13 @@ function stimulus(stim_name, obj_file_name, obj_tex_file_name, obj_mtl_shin, obj
 /**********************
 * 3D Experiment TEST  *
 ***********************/
-var ThreeDExperiment = function() {
+var ThreeDExperiment = function(expPhase) {
+    // exp phase either part 1 or part 2
     
 	var webGLRenderer = new THREE.WebGLRenderer();
 	var listening = false;
 
-    var trialNum = 0, scene, objGroup, stimMesh, redDotMesh, greenDotMesh, redMat, greenMat, camera, num_change_dir, framerate = 10, currStim;
+    var trialNum = 0, correctCounter = 0, scene, objGroup, stimMesh, redDotMesh, greenDotMesh, redMat, greenMat, camera, num_change_dir, framerate = 10, currStim;
     var response, theta = 0, moving, rotDelta, rotDir, aframe, responseDiv, redDotCenter, greenDotCenter, respCorrect, reactionTimeStart, reactionTimeEnd;
     
     var lightPos = [], spotLights = [], ambLight;
@@ -115,101 +133,110 @@ var ThreeDExperiment = function() {
 	
 	var BananaRIGHT = new stimulus('BananaRIGHT', 'banana8.obj', 'banana8.jpg', 1, -90, 50, 2.5, -1, 15, 5, [-0.000132, -0.520213, 1.791464], [0.4144, -1.4719, 1.9175, 0.19258, -0.35, -0.01942], 25, 0.1, 0.1);
 	
-	var BananaFlatLEFT = new stimulus('BananaFlatLEFT', 'banana11_rotated.obj', 'banana8.jpg', 1, -90, 40, 1.9, 1, 15, 5, [0.42014, 0.202933, -0.134221], [0.43, 0.2, -0.5290, 1.65, 0.60, 2.1690], 20, 0.1, 0.1);
+	var BananaFlatLEFT = new stimulus('BananaFlatLEFT', 'banana11_rotated.obj', 'banana11_rotated.jpg', 1, -90, 40, 1.9, 1, 15, 5, [0.42014, 0.202933, -0.134221], [0.43, 0.2, -0.5290, 1.65, 0.60, 2.1690], 20, 0.1, 0.1);
 	
-	var BananaFlatCENTER1 = new stimulus('BananaFlatCENTER1', 'banana11_rotated.obj', 'banana8.jpg', 1, -90, 55, 2.3, -1, 15, 5, [0.42014, 0.202933, -0.134221], [0.43, 0.2, -0.5290, 1.65, 0.60, 2.1690], 27.5, 0.1, 0.1);
+	var BananaFlatCENTER1 = new stimulus('BananaFlatCENTER1', 'banana11_rotated.obj', 'banana11_rotated.jpg', 1, -90, 55, 2.3, -1, 15, 5, [0.42014, 0.202933, -0.134221], [0.43, 0.2, -0.5290, 1.65, 0.60, 2.1690], 27.5, 0.1, 0.1);
 	
-	var BananaFlatCENTER2 = new stimulus('BananaFlatCENTER2', 'banana11_rotated.obj', 'banana8.jpg', 1, -90, 55, 2.3, 1, 15, 5, [0.42014, 0.202933, -0.134221], [0.51, 0.2, 0.2290, 1.68, 0.7, -2.270], 27.5, 0.1, 0.1);
+	var BananaFlatCENTER2 = new stimulus('BananaFlatCENTER2', 'banana11_rotated.obj', 'banana11_rotated.jpg', 1, -90, 55, 2.3, 1, 15, 5, [0.42014, 0.202933, -0.134221], [0.51, 0.2, 0.2290, 1.68, 0.7, -2.270], 27.5, 0.1, 0.1);
 	
-	var BananaFlatRIGHT = new stimulus('BananaFlatRIGHT', 'banana11_rotated.obj', 'banana8.jpg', 1, -90, 40, 1.9, -1, 15, 5, [0.42014, 0.202933, -0.134221], [0.51, 0.2, 0.2290, 1.68, 0.7, -2.270], 20.0, 0.1, 0.1);
+	var BananaFlatRIGHT = new stimulus('BananaFlatRIGHT', 'banana11_rotated.obj', 'banana11_rotated.jpg', 1, -90, 40, 1.9, -1, 15, 5, [0.42014, 0.202933, -0.134221], [0.51, 0.2, 0.2290, 1.68, 0.7, -2.270], 20.0, 0.1, 0.1);
 	
-	var CastoriaBollowLeftWall = new stimulus('CastoriaBollowLeftWall', 'castoria_bollow.obj', 'castoria_2.jpg', 1, 90, 0, 0, 1, 20, 31, [-5.950702, 1.673412, 1.418438], [-3.55, 2.0, -12.64, -8.94, 2.0, -7.20], 15, 0.5, 0.5);
+	var CastoriaBollowLeftWall = new stimulus('CastoriaBollowLeftWall', 'castoria_bollow.obj', 'castoria_2.jpg', 1, 90, 0, 0, 1, 20, 31, [-5.950702, 1.673412, 1.418438], [-3.55, 2.0, -12.64, -8.94, 2.0, -7.20], 15, 0.4, 0.4);
 	
-	var CastoriaBollowRightWall = new stimulus('CastoriaBollowRightWall', 'castoria_bollow.obj', 'castoria_2.jpg', 1, 90, 0, 0, -1, 20, 31, [-5.950702, 1.673412, 1.418438], [-3.79, 2.0, 15.15, -8.91, 2.0, 9.95], 15, 0.5, 0.5);
+	var CastoriaBollowRightWall = new stimulus('CastoriaBollowRightWall', 'castoria_bollow.obj', 'castoria_2.jpg', 1, 90, 0, 0, -1, 20, 31, [-5.950702, 1.673412, 1.418438], [-3.79, 2.0, 15.15, -8.91, 2.0, 9.95], 15, 0.4, 0.4);
 	
-	var CastoriaBollowLEFT = new stimulus('CastoriaBollowLEFT', 'castoria_bollow.obj', 'castoria_2.jpg', 1, 90, 0, 0, 1, 20, 31, [-5.950702, 1.673412, 1.418438], [-5.2918, 0, 0.1146, -9.6484, 0, -5.6206], 15, 0.5, 0.5);
+	var CastoriaBollowLEFT = new stimulus('CastoriaBollowLEFT', 'castoria_bollow.obj', 'castoria_2.jpg', 1, 90, 0, 0, 1, 20, 31, [-5.950702, 1.673412, 1.418438], [-5.2918, 0, 0.1146, -9.6484, 0, -5.6206], 15, 0.4, 0.4);
 	
-	var CastoriaBollowRIGHT = new stimulus('CastoriaBollowRIGHT', 'castoria_bollow.obj', 'castoria_2.jpg', 1, 90, 0, 0, -1, 20, 31, [-5.950702, 1.673412, 1.418438], [-4.7849, 0, 2.2015, -9.6530, 0, 8.3807], 15, 0.5, 0.5);
+	var CastoriaBollowRIGHT = new stimulus('CastoriaBollowRIGHT', 'castoria_bollow.obj', 'castoria_2.jpg', 1, 90, 0, 0, -1, 20, 31, [-5.950702, 1.673412, 1.418438], [-4.7849, 0, 2.2015, -9.6530, 0, 8.3807], 15, 0.4, 0.4);
 	
-	var CastoriaHollowRightWall = new stimulus('CastoriaHollowRightWall', 'castoria_hollow.obj', 'castoria_2.jpg', 1, -90, 0, 0, 1, 20, 31, [-3.542471, -0.005478, 0.00019], [-0.912, 0.0, -14.87, -6.76, 0.0, -8.99], 15, 0.5, 0.5);
+	var CastoriaHollowRightWall = new stimulus('CastoriaHollowRightWall', 'castoria_hollow.obj', 'castoria_2.jpg', 1, -90, 0, 0, 1, 20, 31, [-3.542471, -0.005478, 0.00019], [-0.912, 0.0, -14.87, -6.76, 0.0, -8.99], 15, 0.4, 0.4);
 	
-	var CastoriaHollowLeftWall = new stimulus('CastoriaHollowLeftWall', 'castoria_hollow.obj', 'castoria_2.jpg', 1, -90, 0, 0, -1, 16, 31, [-3.542471, -0.005478, 0.00019], [-1.11, 0.0, 14.6, -6.5, 0.0, 9.28], 15, 0.5, 0.5);
+	var CastoriaHollowLeftWall = new stimulus('CastoriaHollowLeftWall', 'castoria_hollow.obj', 'castoria_2.jpg', 1, -90, 0, 0, -1, 16, 31, [-3.542471, -0.005478, 0.00019], [-1.11, 0.0, 14.6, -6.5, 0.0, 9.28], 15, 0.4, 0.4);
 	
-	var CastoriaHollowLEFT = new stimulus('CastoriaHollowLEFT', 'castoria_hollow.obj', 'castoria_2.jpg', 1, -90, 0, 0, 1, 20, 31, [-3.542471, -0.005478, 0.00019], [-3.6718, -1.0934, 1.4608, -7.6879, -1.0934, 6.9841], 15, 0.5, 0.5);
+	var CastoriaHollowLEFT = new stimulus('CastoriaHollowLEFT', 'castoria_hollow.obj', 'castoria_2.jpg', 1, -90, 0, 0, 1, 20, 31, [-3.542471, -0.005478, 0.00019], [-3.6718, -1.0934, 1.4608, -7.6879, -1.0934, 6.9841], 15, 0.4, 0.4);
 	
-	var CastoriaHollowRIGHT = new stimulus('castoria_hollow.obj', 'castoria_2.jpg', 1, -90, 0, 0, -1, 20, 31, [-3.542471, -0.005478, 0.00019], [-3.2602, -1.0934, -1.0608, -7.6862, -1.0934, -7.0838], 15, 0.5, 0.5);
+	var CastoriaHollowRIGHT = new stimulus('castoria_hollow.obj', 'castoria_2.jpg', 1, -90, 0, 0, -1, 20, 31, [-3.542471, -0.005478, 0.00019], [-3.2602, -1.0934, -1.0608, -7.6862, -1.0934, -7.0838], 15, 0.4, 0.4);
 	
-	var CoconutShallowLEFT = new stimulus('CastoriaHollowRIGHT', 'coconut_shallow.obj', 'coconut_4.jpg', 10, -90, 40.0, 0, 1, 10, 3.8, [-1.041337, 0, 0], [-1.345, 0.0, -1, -0.53265, 0.0, 1.65748], 20.0, 0.5, 0.5);
+	var CoconutShallowLEFT = new stimulus('CastoriaHollowRIGHT', 'coconut_shallow.obj', 'coconut_4.jpg', 10, -90, 40.0, 0, 1, 10, 3.8, [-1.041337, 0, 0], [-1.345, 0.0, -1, -0.53265, 0.0, 1.65748], 20.0, 0.1, 0.1);
 	
-	var CoconutShallowRIGHT = new stimulus('CoconutShallowRIGHT', 'coconut_shallow.obj', 'coconut_4.jpg', 10, -90, 40.0, 0, -1, 10, 3.8, [-1.041337, 0, 0], [-1.345, 0.0, 1, -0.53265, 0.0, -1.65748], 20.0, 0.5, 0.5);
+	var CoconutShallowRIGHT = new stimulus('CoconutShallowRIGHT', 'coconut_shallow.obj', 'coconut_4.jpg', 10, -90, 40.0, 0, -1, 10, 3.8, [-1.041337, 0, 0], [-1.345, 0.0, 1, -0.53265, 0.0, -1.65748], 20.0, 0.1, 0.1);
 	
-	var HalfAppleExtremesLEFT = new stimulus('HalfAppleExtremesLEFT', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 0, 1, 10, 10, [-2.568784, -0.669885, -3.27716], [1.46237, 0.0, -1.75, -6.55508, -0.0, -1.75], 22.5, 0.5, 0.5);
+	var HalfAppleExtremesLEFT = new stimulus('HalfAppleExtremesLEFT', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 0, 1, 10, 10, [-2.568784, -0.669885, -3.27716], [1.46237, 0.0, -1.75, -6.55508, -0.0, -1.75], 22.5, 0.25, 0.25);
 	
-	var HalfAppleExtremesRIGHT = new stimulus('HalfAppleExtremesRIGHT', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 0, -1, 10, 10, [-2.568784, -0.669885, -3.27716], [1.46237, 0.0, -1.75, -6.55508, -0.0, -1.75], 22.5, 0.5, 0.5);
+	var HalfAppleExtremesRIGHT = new stimulus('HalfAppleExtremesRIGHT', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 0, -1, 10, 10, [-2.568784, -0.669885, -3.27716], [1.46237, 0.0, -1.75, -6.55508, -0.0, -1.75], 22.5, 0.25, 0.25);
 	
-	var HalfAppleLEFT = new stimulus('HalfAppleLEFT', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 0, 1, 10, 10, [-2.568784, -0.669885, -3.27716], [-2.56, -0.0, -1.75, -6.55508, -0.0, -1.75], 22.5, 0.5, 0.5);
+	var HalfAppleLEFT = new stimulus('HalfAppleLEFT', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 0, 1, 10, 10, [-2.568784, -0.669885, -3.27716], [-2.56, -0.0, -1.75, -6.55508, -0.0, -1.75], 22.5, 0.25, 0.25);
 	
-	var HalfAppleCENTER1 = new stimulus('HalfAppleCENTER1', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 0, -1, 10, 10, [-2.568784, -0.669885, -3.27716], [-2.56, -0.0, -1.75, -6.55508, -0.0, -1.75], 22.5, 0.5, 0.5);
+	var HalfAppleCENTER1 = new stimulus('HalfAppleCENTER1', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 0, -1, 10, 10, [-2.568784, -0.669885, -3.27716], [-2.56, -0.0, -1.75, -6.55508, -0.0, -1.75], 22.5, 0.25, 0.25);
 	
-	var HalfAppleCENTER2 = new stimulus('HalfAppleCENTER2', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 0, 1, 10, 10, [-2.568784, -0.669885, -3.27716], [-2.56, -0.0, -1.75, 1.46237, 0.0, -1.75], 22.5, 0.5, 0.5);
+	var HalfAppleCENTER2 = new stimulus('HalfAppleCENTER2', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 0, 1, 10, 10, [-2.568784, -0.669885, -3.27716], [-2.56, -0.0, -1.75, 1.46237, 0.0, -1.75], 22.5, 0.25, 0.25);
 	
-	var HalfAppleRIGHT = new stimulus('HalfAppleRIGHT', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 0, -1, 10, 10, [-2.568784, -0.669885, -3.27716], [-2.56, -0.0, -1.75, 1.46237, 0.0, -1.75], 22.5, 0.5, 0.5);
+	var HalfAppleRIGHT = new stimulus('HalfAppleRIGHT', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 0, -1, 10, 10, [-2.568784, -0.669885, -3.27716], [-2.56, -0.0, -1.75, 1.46237, 0.0, -1.75], 22.5, 0.25, 0.25);
 	
-	var HumanFaceBollowEyebrowLEFT = new stimulus('HumanFaceBollowEyebrowLEFT', 'human_face_bollow.obj', 'human_face.jpg', 1, 0, 20.0, 0, 1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0, -1.4867, 4.2068, 0], 11.0, 0.5, 0.5);
+	var HumanFaceBollowEyebrowLEFT = new stimulus('HumanFaceBollowEyebrowLEFT', 'human_face_bollow.obj', 'human_face.jpg', 1, 0, 20.0, 0, 1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0, -1.4867, 4.2068, 0], 11.0, 0.1, 0.1);
 	
-	var HumanFaceBollowEyebrowRIGHT = new stimulus('HumanFaceBollowEyebrowRIGHT', 'human_face_bollow.obj', 'human_face.jpg', 1, 0, 20.0, 0, -1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0, -1.4867, 4.2068, 0], 11.0, 0.5, 0.5);
+	var HumanFaceBollowEyebrowRIGHT = new stimulus('HumanFaceBollowEyebrowRIGHT', 'human_face_bollow.obj', 'human_face.jpg', 1, 0, 20.0, 0, -1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0, -1.4867, 4.2068, 0], 11.0, 0.1, 0.1);
 	
-	var HumanFaceBollowLEFT = new stimulus('HumanFaceBollowLEFT', 'human_face_bollow.obj', 'human_face.jpg', 1, 0, 20.0, 0, 1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.351, -1.6367, 2.2068, -0.1603], 11.0, 0.5, 0.5);
+	var HumanFaceBollowLEFT = new stimulus('HumanFaceBollowLEFT', 'human_face_bollow.obj', 'human_face.jpg', 1, 0, 20.0, 0, 1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.351, -1.6367, 2.2068, -0.1603], 11.0, 0.1, 0.1);
 
-	var HumanFaceBollowRIGHT = new stimulus('HumanFaceBollowRIGHT', 'human_face_bollow.obj', 'human_face.jpg', 1, 0, 20.0, 0, -1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.351, 1.7667, 2.2068, -0.0722], 11.0, 0.5, 0.5);
+	var HumanFaceBollowRIGHT = new stimulus('HumanFaceBollowRIGHT', 'human_face_bollow.obj', 'human_face.jpg', 1, 0, 20.0, 0, -1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.351, 1.7667, 2.2068, -0.0722], 11.0, 0.1, 0.1);
 	
-	var HumanFaceHollowEyebrowLEFT = new stimulus('HumanFaceHollowEyebrowLEFT', 'human_face_hollow.obj', 'human_face.jpg', 16, 180, 20.0, 0, 1, 12, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0.1, -1.4867, 4.2068, 0.1], 10.0, 0.5, 0.5);
+	var HumanFaceHollowEyebrowLEFT = new stimulus('HumanFaceHollowEyebrowLEFT', 'human_face_hollow.obj', 'human_face.jpg', 16, 180, 20.0, 0, 1, 12, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0.1, -1.4867, 4.2068, 0.1], 10.0, 0.1, 0.1);
 	
-	var HumanFaceHollowEyebrowRIGHT = new stimulus('HumanFaceHollowEyebrowRIGHT', 'human_face_hollow.obj', 'human_face.jpg', 16, 180, 20.0, 0, -1, 12, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0.1, -1.4867, 4.2068, 0.1], 10.0, 0.5, 0.5);
+	var HumanFaceHollowEyebrowRIGHT = new stimulus('HumanFaceHollowEyebrowRIGHT', 'human_face_hollow.obj', 'human_face.jpg', 16, 180, 20.0, 0, -1, 12, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0.1, -1.4867, 4.2068, 0.1], 10.0, 0.1, 0.1);
 	
-	var HumanFaceHollowLEFT = new stimulus('HumanFaceHollowLEFT', 'human_face_hollow.obj', 'human_face.jpg', 16, 180, 20.0, 0, 1, 12, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.505, 1.5367, 2.2068, 0.3693], 10.0, 0.5, 0.5);
+	var HumanFaceHollowLEFT = new stimulus('HumanFaceHollowLEFT', 'human_face_hollow.obj', 'human_face.jpg', 16, 180, 20.0, 0, 1, 12, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.505, 1.5367, 2.2068, 0.3693], 10.0, 0.1, 0.1);
 	
-	var HumanFaceHollowRIGHT = new stimulus('HumanFaceHollowRIGHT', 'human_face_hollow.obj', 'human_face.jpg', 16, 180, 20.0, 0, -1, 12, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.505, -1.4367, 2.2068, 0.303], 10.0, 0.5, 0.5);
+	var HumanFaceHollowRIGHT = new stimulus('HumanFaceHollowRIGHT', 'human_face_hollow.obj', 'human_face.jpg', 16, 180, 20.0, 0, -1, 12, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.505, -1.4367, 2.2068, 0.303], 10.0, 0.1, 0.1);
 	
-	var MonkeyToyLEFT = new stimulus('MonkeyToyLEFT', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 2.7, 1, 10, 10.8, [0, 0, 0], [2.0, -1.3339, 0, 1.50413, -0.7, 4.79006], 22.5, 0.5, 0.5);
+	var MonkeyToyLEFT = new stimulus('MonkeyToyLEFT', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 2.7, 1, 10, 10.8, [0, 0, 0], [2.0, -1.3339, 0, 1.50413, -0.7, 4.79006], 22.5, 0.25, 0.25);
 	
-	var MonkeyToyCENTER1 = new stimulus('MonkeyToyCENTER1', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 2.7, -1, 10, 10.8, [0, 0, 0], [2.0, -1.3339, 0, 1.50413, -0.7, 4.79006], 22.5, 0.5, 0.5);
+	var MonkeyToyCENTER1 = new stimulus('MonkeyToyCENTER1', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 2.7, -1, 10, 10.8, [0, 0, 0], [2.0, -1.3339, 0, 1.50413, -0.7, 4.79006], 22.5, 0.25, 0.25);
 	
-	var MonkeyToyCENTER2 = new stimulus('MonkeyToyCENTER2', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 2.7, 1, 10, 10.8, [0, 0, 0], [2.0, -1.3339, 0, 1.50413, -0.7, -4.77867], 22.5, 0.5, 0.5);
+	var MonkeyToyCENTER2 = new stimulus('MonkeyToyCENTER2', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 2.7, 1, 10, 10.8, [0, 0, 0], [2.0, -1.3339, 0, 1.50413, -0.7, -4.77867], 22.5, 0.25, 0.25);
 	
-	var MonkeyToyRIGHT = new stimulus('MonkeyToyRIGHT', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 2.7, -1, 10, 10.8, [0, 0, 0], [2.0, -1.3339, 0, 1.50413, -0.7, -4.77867], 22.5, 0.5, 0.5);
+	var MonkeyToyRIGHT = new stimulus('MonkeyToyRIGHT', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 2.7, -1, 10, 10.8, [0, 0, 0], [2.0, -1.3339, 0, 1.50413, -0.7, -4.77867], 22.5, 0.25, 0.25);
 	
-	var MonkeyToyExtremesLEFT = new stimulus('MonkeyToyExtremesLEFT', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 2.7, 1, 10, 10.8, [0, 0, 0], [1.50413, -0.7, 4.79006, 1.50413, -0.7, -4.77867], 22.5, 0.5, 0.5);
+	var MonkeyToyExtremesLEFT = new stimulus('MonkeyToyExtremesLEFT', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 2.7, 1, 10, 10.8, [0, 0, 0], [1.50413, -0.7, 4.79006, 1.50413, -0.7, -4.77867], 22.5, 0.25, 0.25);
 	
-	var MonkeyToyExtremesRIGHT = new stimulus('MonkeyToyExtremesRIGHT', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 2.7, -1, 10, 10.8, [0, 0, 0], [1.50413, -0.7, 4.79006, 1.50413, -0.7, -4.77867], 22.5, 0.5, 0.5);
+	var MonkeyToyExtremesRIGHT = new stimulus('MonkeyToyExtremesRIGHT', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 2.7, -1, 10, 10.8, [0, 0, 0], [1.50413, -0.7, 4.79006, 1.50413, -0.7, -4.77867], 22.5, 0.25, 0.25);
 	
-	var MonkeyFaceBollowOffSnoutLEFT = new stimulus('MonkeyFaceBollowOffSnoutLEFT', 'Monkey_Face_Bollow.obj', 'Monkey_Face_Bollow.jpg', 15, 0, 20.0, 1.5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [4.018, -0.44, 8.075, -8.97972, 5.0, 1.1087], 10.0, 0.5, 0.5);
+	var MonkeyFaceBollowOffSnoutLEFT = new stimulus('MonkeyFaceBollowOffSnoutLEFT', 'Monkey_Face_Bollow.obj', 'Monkey_Face_Bollow.jpg', 15, 0, 20.0, 1.5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [4.018, -0.44, 8.075, -8.97972, 5.0, 1.1087], 10.0, 0.4, 0.4);
 	
-	var MonkeyFaceBollowOffSnoutRIGHT = new stimulus('MonkeyFaceBollowOffSnoutRIGHT', 'Monkey_Face_Bollow.obj', 'Monkey_Face_Bollow.jpg', 15, 0, 20.0, 1.5, -1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [-2.78, -0.09, 8.823, 8.29647, 4.0, 0.6036], 10.0, 0.5, 0.5);
+	var MonkeyFaceBollowOffSnoutRIGHT = new stimulus('MonkeyFaceBollowOffSnoutRIGHT', 'Monkey_Face_Bollow.obj', 'Monkey_Face_Bollow.jpg', 15, 0, 20.0, 1.5, -1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [-2.78, -0.09, 8.823, 8.29647, 4.0, 0.6036], 10.0, 0.4, 0.4);
 	
-	var MonkeyFaceBollowLEFT = new stimulus('MonkeyFaceBollowLEFT', 'Monkey_Face_Bollow.obj', 'Monkey_Face_Bollow.jpg', 15, 0, 20.0, 1.5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 10.8, -8.97972, 5.0, 1.1087], 10.0, 0.5, 0.5);
+	var MonkeyFaceBollowLEFT = new stimulus('MonkeyFaceBollowLEFT', 'Monkey_Face_Bollow.obj', 'Monkey_Face_Bollow.jpg', 15, 0, 20.0, 1.5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 10.8, -8.97972, 5.0, 1.1087], 10.0, 0.4, 0.4);
 	
-	var MonkeyFaceBollowRIGHT = new stimulus('MonkeyFaceBollowRIGHT', 'Monkey_Face_Bollow.obj', 'Monkey_Face_Bollow.jpg', 15, 0, 20.0, 1.5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 10.8, 8.29647, 4.0, 0.7036], 10.0, 0.5, 0.5);
+	var MonkeyFaceBollowRIGHT = new stimulus('MonkeyFaceBollowRIGHT', 'Monkey_Face_Bollow.obj', 'Monkey_Face_Bollow.jpg', 15, 0, 20.0, 1.5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 10.8, 8.29647, 4.0, 0.7036], 10.0, 0.4, 0.4);
 	
 	var MonkeyFaceHollowOffSnoutLEFT = new stimulus('MonkeyFaceHollowOffSnoutLEFT', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 1.4, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [-3.5, 0.46, 8.471, 8.29647, 4.0, 1.8], 8.5, 0.5, 0.5);
 	
 	var MonkeyFaceHollowOffSnoutRIGHT = new stimulus('MonkeyFaceHollowOffSnoutRIGHT', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 1.4, -1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [4.51, 0.11, 7.96, -8.07972, 5.0, 3.0], 8.5, 0.5, 0.5);
 	
-	var MonkeyFaceHollowLEFT = new stimulus('MonkeyFaceHollowLEFT', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 1.4, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 11.7, 8.29647, 4.0, 1.8], 8.5, 0.5, 0.5);
+	var MonkeyFaceHollowLEFT = new stimulus('MonkeyFaceHollowLEFT', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 1.4, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 11.7, 8.29647, 4.0, 1.8], 8.5, 0.3, 0.3);
 	
 	var MonkeyFaceHollowRIGHT = new stimulus('MonkeyFaceHollowRIGHT', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 1.4, -1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 11.7, -8.07972, 5.0, 3.0], 8.5, 0.5, 0.5);
 	
-	var WholeAppleLEFT = new stimulus('WholeAppleLEFT', 'apple_18.obj', 'apple_18.jpg', 96, -90, 0, 0, 1, 10, 10, [-2.560498, -2.405302, -1.549059], [0.1038, -1.9658, -5.3794, 1.6837, -1.9658, 0.1910], 15.0, 0.6, 0.6);
+	var WholeAppleLEFT = new stimulus('WholeAppleLEFT', 'apple_18.obj', 'apple_18.jpg', 96, -90, 0, 0, 1, 10, 10, [-2.560498, -2.405302, -1.549059], [0.1038, -1.9658, -5.3794, 1.6837, -1.9658, 0.1910], 15.0, 0.35, 0.35);
 	
-	var WholeAppleRIGHT = new stimulus('WholeAppleRIGHT', 'apple_18.obj', 'apple_18.jpg', 96, -90, 0, 0, -1, 10, 10, [-2.560498, -2.405302, -1.549059], [1.4038, -1.9658, -3.7794, 0.8737, -1.9658, 1.5910], 15.0, 0.6, 0.6);
+	var WholeAppleRIGHT = new stimulus('WholeAppleRIGHT', 'apple_18.obj', 'apple_18.jpg', 96, -90, 0, 0, -1, 10, 10, [-2.560498, -2.405302, -1.549059], [1.4038, -1.9658, -3.7794, 0.8737, -1.9658, 1.5910], 15.0, 0.35, 0.35);
 
-	var stimList = [BananaExtremesLEFT, BananaExtremesRIGHT, BananaLEFT, BananaCENTER1, BananaCENTER2, BananaRIGHT, BananaFlatLEFT, BananaFlatCENTER1, BananaFlatCENTER2, BananaFlatRIGHT, CastoriaBollowLeftWall, CastoriaBollowRightWall, CastoriaBollowLEFT, CastoriaBollowRIGHT, CastoriaHollowRightWall, CastoriaHollowLeftWall, CastoriaHollowLEFT, CastoriaHollowRIGHT, CoconutShallowLEFT, CoconutShallowRIGHT, HalfAppleExtremesLEFT, HalfAppleExtremesRIGHT, HalfAppleLEFT, HalfAppleCENTER1, HalfAppleCENTER2, HalfAppleRIGHT, HumanFaceBollowEyebrowLEFT, HumanFaceBollowEyebrowRIGHT, HumanFaceBollowLEFT, HumanFaceBollowRIGHT, HumanFaceHollowEyebrowLEFT, HumanFaceHollowEyebrowRIGHT, HumanFaceHollowLEFT, HumanFaceHollowRIGHT, MonkeyToyLEFT, MonkeyToyCENTER1, MonkeyToyCENTER2, MonkeyToyRIGHT, MonkeyToyExtremesLEFT, MonkeyToyExtremesRIGHT, MonkeyFaceBollowOffSnoutLEFT, MonkeyFaceBollowOffSnoutRIGHT, MonkeyFaceBollowLEFT, MonkeyFaceBollowRIGHT, MonkeyFaceHollowOffSnoutLEFT, MonkeyFaceHollowOffSnoutRIGHT, MonkeyFaceHollowLEFT, MonkeyFaceHollowRIGHT, WholeAppleLEFT, WholeAppleRIGHT];
+	var stimList = [];
+	if (expPhase == 'part1') {
+		// only unambiguous stimuli
+		stimList = [BananaExtremesLEFT, BananaExtremesRIGHT, BananaLEFT, BananaCENTER1, BananaCENTER2, BananaRIGHT, BananaFlatLEFT, BananaFlatCENTER1, BananaFlatCENTER2, BananaFlatRIGHT,  CoconutShallowLEFT, CoconutShallowRIGHT, HalfAppleExtremesLEFT, HalfAppleExtremesRIGHT, HalfAppleLEFT, HalfAppleCENTER1, HalfAppleCENTER2, HalfAppleRIGHT, MonkeyToyLEFT, MonkeyToyCENTER1, MonkeyToyCENTER2, MonkeyToyRIGHT, MonkeyToyExtremesLEFT, MonkeyToyExtremesRIGHT, WholeAppleLEFT, WholeAppleRIGHT];
+	} else if (expPhase == 'part2') {
+		// only illusory stimuli
+		stimList = [CastoriaBollowLeftWall, CastoriaBollowRightWall, CastoriaBollowLEFT, CastoriaBollowRIGHT, HumanFaceHollowEyebrowLEFT, HumanFaceHollowEyebrowRIGHT, HumanFaceHollowLEFT, HumanFaceHollowRIGHT, MonkeyFaceHollowOffSnoutLEFT, MonkeyFaceHollowOffSnoutRIGHT, MonkeyFaceHollowLEFT];
+		// catch phase - only unambiguous stimuli -- not sure what the logic is for picking this or above
+		/*stimList = [CastoriaHollowRightWall, CastoriaHollowLeftWall, CastoriaHollowLEFT, CastoriaHollowRIGHT, HumanFaceBollowEyebrowLEFT, HumanFaceBollowEyebrowRIGHT, HumanFaceBollowLEFT, HumanFaceBollowRIGHT, MonkeyFaceBollowOffSnoutLEFT, MonkeyFaceBollowOffSnoutRIGHT, MonkeyFaceBollowLEFT, MonkeyFaceBollowRIGHT];*/
+	}
 
     // function where we initialize the general 3D settings
 	var threeDstuff = function() {
         // init vars
-    	//currStim = stimList[Math.floor(Math.random() * stimList.length)];
-		currStim = BananaExtremesRIGHT;
+    	currStim = stimList[Math.floor(Math.random() * stimList.length)];
+		//currStim = MonkeyFaceHollowOffSnoutLEFT;
 
 		currStim.obj.scaling = currStim.obj.good_size/currStim.obj.size;
 		rotDir = currStim.obj.rot_init_dir;
@@ -227,7 +254,7 @@ var ThreeDExperiment = function() {
         
         // position and point the camera to the center of the scene
         //camera.position.set(0, 0, currStim.obj.distance);
-        camera.position.set(0, 10, currStim.obj.distance); // raise camera so we can see if rotation is about object center
+        camera.position.set(0, 0, currStim.obj.distance); // raise camera so we can see if rotation is about object center
         camera.lookAt(new THREE.Vector3(0, 0, 0));
     
         // create a render and set the size
@@ -381,12 +408,12 @@ var ThreeDExperiment = function() {
 		objGroup.rotation.y = currStim.obj.rot_init_ang;
 		
 		// draw line for rotation reference
-		var lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
-		var lineGeometry = new THREE.Geometry();
-		lineGeometry.vertices.push(new THREE.Vector3(0, -100, 0));
-		lineGeometry.vertices.push(new THREE.Vector3(0, 100, 0));
-		var Line = new THREE.Line(lineGeometry,lineMaterial);
-		objGroup.add(Line);
+		// var lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
+		// var lineGeometry = new THREE.Geometry();
+		// lineGeometry.vertices.push(new THREE.Vector3(0, -100, 0));
+		// lineGeometry.vertices.push(new THREE.Vector3(0, 100, 0));
+		// var Line = new THREE.Line(lineGeometry,lineMaterial);
+		// objGroup.add(Line);
     }
 
     function addLights() {
@@ -422,8 +449,8 @@ var ThreeDExperiment = function() {
 		redMat = new THREE.MeshPhongMaterial({ 
 	    	color: 0x999999, 
 	    	specular: 0x050505,
-	    	//shininess: currStim.obj.mtl_shin
-	    	//opacity: 0, transparent: true
+	    	shininess: currStim.obj.mtl_shin,
+	    	opacity: 0, transparent: true
     	});
 		redMat.map = textureR;
 		redDotMesh = new THREE.Mesh(redGeo, redMat);
@@ -441,8 +468,8 @@ var ThreeDExperiment = function() {
 		greenMat = new THREE.MeshPhongMaterial({ 
         	color: 0x999999, 
 	    	specular: 0x050505,
-	    	//shininess: currStim.obj.mtl_shin
-	    	//opacity: 0, transparent: true
+	    	shininess: currStim.obj.mtl_shin,
+	    	opacity: 0, transparent: true
     	});
 		greenMat.map = textureG;
 		greenDotMesh = new THREE.Mesh(greenGeo, greenMat);
@@ -479,7 +506,7 @@ var ThreeDExperiment = function() {
 			greenPos = currStim.dots.g_pos;
 		}
 		
-		psiTurk.recordTrialData({'phase':'trials', 
+		psiTurk.recordTrialData({'phase':expPhase, 
 			'trial':trialNum,
 			'stim_name':currStim.name, 
 			'stim_light_color':currStim.light,
@@ -516,17 +543,27 @@ var ThreeDExperiment = function() {
 
 	var next = function() {
 		// remove textual confirmation
-		document.getElementById("3dstuff").removeChild(responseDiv);
+		if (expPhase == 'part1') document.getElementById("3dstuff").removeChild(responseDiv);
 		
 	    // remove old dom element 
 	    document.getElementById("3dstuff").removeChild(webGLRenderer.domElement); 
-	    
-		if (trialNum == 10) {
-			finish();
-		}
-		else {
-			threeDstuff();
-		}
+	    if (expPhase == 'part1') {
+			if (trialNum == 10) {
+				getTheRule('B');
+			}
+			else if (correctCounter == 8) {
+				getTheRule('A');
+			}
+			else {
+				threeDstuff();
+			}
+	    } else if (expPhase == 'part2') {
+	    	if (trialNum == 5) {
+	    		finishExp();
+	    	} else {
+	    		threeDstuff();
+	    	}
+	    }
 	};
 	
 	var response_handler = function(e) {
@@ -555,12 +592,6 @@ var ThreeDExperiment = function() {
 		}
 	};
 
-	var finish = function() {
-	    $("body").unbind("keydown", response_handler); // Unbind keys
-	    currentview = new Questionnaire();
-	};
-	
-	
    function createMesh(geom, imageFile) {
         var texture = THREE.ImageUtils.loadTexture("../static/images/objects/" + imageFile)
         var mat = new THREE.MeshPhongMaterial({ 
@@ -603,7 +634,6 @@ var ThreeDExperiment = function() {
         
 	var feedback = function() {
     	respCorrect = false;
-
 	    // figure out if response was correct
 	    //use dotColorFlipped variable to determine the color/position relationship
 	    if (currStim.dots.color_flipped == 0) {
@@ -622,14 +652,20 @@ var ThreeDExperiment = function() {
 	    }
 	    
 	    if (respCorrect) {
-	        correctAudio.play();
-	        textC();
+	    	if (expPhase == 'part1') {
+		        correctAudio.play();
+		        textC();
+	    	}
+	        correctCounter++;
 	    } else {
-            incorrectAudio.play();
-	        textI();
+	    	if (expPhase == 'part1') {
+	            incorrectAudio.play();
+		        textI();
+	    	}
+	        correctCounter = 0;
 	    }
 	   
-	    setTimeout(next,3000);
+	    setTimeout(next,2000);
 	};
 	
 	var textC = function() {
@@ -658,6 +694,17 @@ var ThreeDExperiment = function() {
 	    document.getElementById("3dstuff").appendChild(responseDiv);
 	}
 	
+	var getTheRule = function(ruleCond) {
+	    $("body").unbind("keydown", response_handler); // Unbind keys
+	    currentview = new TheRule(ruleCond);
+	};
+	
+	var finishExp = function() {
+	    // finalize the HIT and so on
+	    $("body").unbind("keydown", response_handler); // Unbind keys
+	    currentview = new TheEnd();
+	}
+	
 	// Load the stage.html snippet into the body of the page
 	psiTurk.showPage('stage.html');
 
@@ -672,32 +719,65 @@ var ThreeDExperiment = function() {
     incorrectAudio.setAttribute("src","../static/sounds/error.wav");
     document.getElementById("3dstuff").appendChild(incorrectAudio);
 
-
     // start trial
     threeDstuff();
 };
 
 
 /****************
-* Questionnaire *
+* TheRule *
 ****************/
 
-var Questionnaire = function() {
-
-	var error_message = "<h1>Oops!</h1><p>Something went wrong submitting your HIT. This might happen if you lose your internet connection. Press the button to resubmit.</p><button id='resubmit'>Resubmit</button>";
+var TheRule = function(ruleCond) {
+    // ruleCond 
+    // == A: correctCounter == 8 - someone got 8 consecutive correct answers
+    // == B: trialNum == 10
 
 	record_responses = function() {
-
-		psiTurk.recordTrialData({'phase':'postquestionnaire', 'status':'submit'});
+		psiTurk.recordTrialData({'phase':'therule', 'status':'submit'});
 
 		$('textarea').each( function(i, val) {
 			psiTurk.recordUnstructuredData(this.id, this.value);
 		});
-		$('select').each( function(i, val) {
-			psiTurk.recordUnstructuredData(this.id, this.value);		
-		});
-
 	};
+
+	// Load the questionnaire snippet 
+	if (ruleCond == 'A') {
+	    psiTurk.showPage('getRuleA.html');
+	} else {
+	    psiTurk.showPage('getRuleB.html');
+	}
+	psiTurk.recordTrialData({'phase':'therule', 'status':'begin'});
+	
+	$("#next").click(function () {
+	    record_responses();
+	    psiTurk.saveData();
+	    
+	    psiTurk.doInstructions(
+        	instructionPages2, // a list of pages you want to display in sequence
+        	function() { currentview = new ThreeDExperiment('part2'); } // what you want to do when you are done with instructions
+        );
+	});
+};
+
+
+/****************
+* THE END *
+****************/
+
+var TheEnd = function() {
+
+	var error_message = "<h1>Oops!</h1><p>Something went wrong submitting your HIT. This might happen if you lose your internet connection. Press the button to resubmit.</p><button id='resubmit'>Resubmit</button>";
+
+// 	record_responses = function() {
+
+// 		psiTurk.recordTrialData({'phase':'therule', 'status':'submit'});
+
+// 		$('textarea').each( function(i, val) {
+// 			psiTurk.recordUnstructuredData(this.id, this.value);
+// 		});
+
+// 	};
 
 	prompt_resubmit = function() {
 		document.body.innerHTML = error_message;
@@ -722,11 +802,11 @@ var Questionnaire = function() {
 	};
 
 	// Load the questionnaire snippet 
-	psiTurk.showPage('postquestionnaire.html');
-	psiTurk.recordTrialData({'phase':'postquestionnaire', 'status':'begin'});
+	psiTurk.showPage('theend.html');
+// 	psiTurk.recordTrialData({'phase':'therule', 'status':'begin'});
 	
 	$("#next").click(function () {
-	    record_responses();
+	   // record_responses();
 	    psiTurk.saveData({
             success: function(){
                 psiTurk.computeBonus('compute_bonus', function() { 
@@ -735,9 +815,9 @@ var Questionnaire = function() {
             }, 
             error: prompt_resubmit});
 	});
-    
 	
 };
+
 
 // Task object to keep track of the current phase
 var currentview;
@@ -748,6 +828,6 @@ var currentview;
 $(window).load( function(){
     psiTurk.doInstructions(
     	instructionPages, // a list of pages you want to display in sequence
-    	function() { currentview = new ThreeDExperiment(); } // what you want to do when you are done with instructions
+    	function() { currentview = new ThreeDExperiment('part1'); } // what you want to do when you are done with instructions
     );
 });

@@ -14,7 +14,7 @@ allow_repeats = false
 
 [Database Parameters]
 database_url = sqlite:///participants.db
-table_name = turkdemo
+table_name = reverspective_pilot
 
 [Server Parameters]
 host = 0.0.0.0
