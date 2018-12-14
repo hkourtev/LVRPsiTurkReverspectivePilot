@@ -1,0 +1,172 @@
+	// create stimuli
+	var BananaExtremesLEFT = new stimulus('BananaExtremesLEFT', 'banana8.obj', 'banana8.jpg', 1, -90, 50, 7.5, 1, 15, 5, [-0.000132, -0.520213, 1.791464], [0.19258, -0.35, -0.01942, 0.31166, -0.35, 4.14541], 25, 0.1, 0.1, 0.12, 0.12);
+	
+	var BananaExtremesRIGHT = new stimulus('BananaExtremesRIGHT', 'banana8.obj', 'banana8.jpg', 1, -90, 50, 7.5, 1, 15, 5, [-0.000132, -0.520213, 1.791464], [0.19258, -0.35, -0.01942, 0.31166, -0.35, 4.14541], 25, 0.1, 0.1, 0.12, 0.12);
+	
+	var BananaLEFT = new stimulus('BananaLEFT', 'banana8.obj', 'banana8.jpg', 1, -90, 50, 7.5, 1, 15, 5, [-0.000132, -0.520213, 1.791464], [0.4144, -1.4719, 1.9175, 0.31166, -0.35, 4.14541], 25, 0.1, 0.1, 0.12, 0.12);
+	
+	var BananaCENTER1 = new stimulus('BananaCENTER1', 'banana8.obj', 'banana8.jpg', 1, -90, 50, 7.5, -1, 15, 5, [-0.000132, -0.520213, 1.791464], [0.4144, -1.4719, 1.9175, 0.31166, -0.35, 4.14541], 25, 0.1, 0.1, 0.115, 0.115);
+	
+	var BananaCENTER2 = new stimulus('BananaCENTER2', 'banana8.obj', 'banana8.jpg', 1, -90, 50, 7.5, 1, 15, 5, [-0.000132, -0.520213, 1.791464], [0.4144, -1.4719, 1.9175, 0.19258, -0.35, -0.01942], 25, 0.1, 0.1, 0.115, 0.115);
+	
+	var BananaRIGHT = new stimulus('BananaRIGHT', 'banana8.obj', 'banana8.jpg', 1, -90, 50, 7.5, -1, 15, 5, [-0.000132, -0.520213, 1.791464], [0.4144, -1.4719, 1.9175, 0.19258, -0.35, -0.01942], 25, 0.1, 0.1, 0.12, 0.12);
+	
+	var BananaFlatLEFT = new stimulus('BananaFlatLEFT', 'banana11_rotated.obj', 'banana11_rotated.jpg', 1, -90, 40, 7.5, 1, 15, 5, [0.42014, 0.202933, -0.134221], [0.43, 0.2, -0.5290, 1.65, 0.60, 2.1690], 20, 0.1, 0.1, 0.12, 012);
+	
+	var BananaFlatCENTER1 = new stimulus('BananaFlatCENTER1', 'banana11_rotated.obj', 'banana11_rotated.jpg', 1, -90, 55, 7.5, -1, 15, 5, [0.42014, 0.202933, -0.134221], [0.43, 0.2, -0.5290, 1.65, 0.60, 2.1690], 27.5, 0.1, 0.1, 0.12, 0.12);
+	
+	var BananaFlatCENTER2 = new stimulus('BananaFlatCENTER2', 'banana11_rotated.obj', 'banana11_rotated.jpg', 1, -90, 55, 7.5, 1, 15, 5, [0.42014, 0.202933, -0.134221], [0.51, 0.2, 0.2290, 1.68, 0.7, -2.270], 27.5, 0.1, 0.1, 0.12, 0.12);
+	
+	var BananaFlatRIGHT = new stimulus('BananaFlatRIGHT', 'banana11_rotated.obj', 'banana11_rotated.jpg', 1, -90, 40, 7.5, -1, 15, 5, [0.42014, 0.202933, -0.134221], [0.51, 0.2, 0.2290, 1.68, 0.7, -2.270], 20.0, 0.1, 0.1, 0.12, 0.12);
+	
+	var BlankFaceBollowEyebrowLEFT = new stimulus('BlankFaceBollowEyebrowLEFT', 'human_face_bollow.obj', 'blank_face.jpg', 1, 0, 20.0, 5, 1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0, -1.4867, 4.2068, 0], 11.0, 0.1, 0.1);
+	
+	var BlankFaceBollowEyebrowRIGHT = new stimulus('BlankFaceBollowEyebrowRIGHT', 'human_face_bollow.obj', 'blank_face.jpg', 1, 0, 20.0, 5, -1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0, -1.4867, 4.2068, 0], 11.0, 0.1, 0.1);
+	
+	var BlankFaceBollowLEFT = new stimulus('BlankFaceBollowLEFT', 'human_face_bollow.obj', 'blank_face.jpg', 1, 0, 20.0, 5, 1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.401, -1.7367, 2.2068, -0.1603], 11.0, 0.1, 0.1);
+
+	var BlankFaceBollowRIGHT = new stimulus('BlankFaceBollowRIGHT', 'human_face_bollow.obj', 'blank_face.jpg', 1, 0, 20.0, 5, -1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.401, 1.9367, 2.2068, -0.1603], 11.0, 0.1, 0.1);
+	
+	var BlankFaceHollowEyebrowLEFT = new stimulus('BlankFaceHollowEyebrowLEFT', 'human_face_hollow.obj', 'blank_face.jpg', 16, 180, 20.0, 5, 1, 12, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0.1, -1.4867, 4.2068, 0.1], 10.0, 0.1, 0.1);
+	
+	var BlankFaceHollowEyebrowRIGHT = new stimulus('BlankFaceHollowEyebrowRIGHT', 'human_face_hollow.obj', 'blank_face.jpg', 16, 180, 20.0, 5, -1, 12, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0.1, -1.4867, 4.2068, 0.1], 10.0, 0.1, 0.1);
+	
+	var BlankFaceHollowLEFT = new stimulus('BlankFaceHollowLEFT', 'human_face_hollow.obj', 'blank_face.jpg', 16, 180, 20.0, 5, 1, 12, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.505, 1.5367, 2.2068, 0.3693], 10.0, 0.1, 0.1);
+	
+	var BlankFaceHollowRIGHT = new stimulus('BlankFaceHollowRIGHT', 'human_face_hollow.obj', 'blank_face.jpg', 16, 180, 20.0, 5, -1, 12, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.505, -1.4367, 2.2068, 0.303], 10.0, 0.1, 0.1);
+	
+	var BlankMonkeyFaceBollowOffSnoutLEFT = new stimulus('BlankMonkeyFaceBollowOffSnoutLEFT', 'Monkey_Face_Bollow.obj', 'blank_face.jpg', 15, 0, 20.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [4.318, -0.44, 8.075, -9.57972, 5.0, 1.1087], 10.0, 0.4, 0.4);
+	
+	var BlankMonkeyFaceBollowOffSnoutRIGHT = new stimulus('BlankMonkeyFaceBollowOffSnoutRIGHT', 'Monkey_Face_Bollow.obj', 'blank_face.jpg', 15, 0, 20.0, 5, -1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [-2.78, -0.09, 8.823, 8.89647, 4.0, 0.6036], 10.0, 0.4, 0.4);
+	
+	var BlankMonkeyFaceBollowLEFT = new stimulus('BlankMonkeyFaceBollowLEFT', 'Monkey_Face_Bollow.obj', 'blank_face.jpg', 15, 0, 20.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 11, -9.17972, 5.0, 1.4087], 10.0, 0.4, 0.4);
+	
+	var BlankMonkeyFaceBollowRIGHT = new stimulus('BlankMonkeyFaceBollowRIGHT', 'Monkey_Face_Bollow.obj', 'blank_face.jpg', 15, 0, 20.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [1.6625, -1.8, 10.8, 8.29647, 4.0, 1.4036], 10.0, 0.4, 0.4);
+	
+	var BlankMonkeyFaceHollowOffSnoutLEFT = new stimulus('BlankMonkeyFaceHollowOffSnoutLEFT', 'Monkey_Face_Hollow.obj', 'blank_face.jpg', 15, 180, 17.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [-3.5, 0.46, 8.471, 8.29647, 4.0, 1.6], 8.5, 0.5, 0.5);
+	
+	var BlankMonkeyFaceHollowOffSnoutRIGHT = new stimulus('BlankMonkeyFaceHollowOffSnoutRIGHT', 'Monkey_Face_Hollow.obj', 'blank_face.jpg', 15, 180, 17.0, 5, -1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [4.51, 0.11, 7.96, -8.07972, 5.0, 3.0], 8.5, 0.5, 0.5);
+	
+	var BlankMonkeyFaceHollowLEFT = new stimulus('BlankMonkeyFaceHollowLEFT', 'Monkey_Face_Hollow.obj', 'blank_face.jpg', 15, 180, 17.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 11.7, 8.29647, 4.0, 1.8], 8.5, 0.5, 0.5);
+	
+	var BlankMonkeyFaceHollowRIGHT = new stimulus('BlankMonkeyFaceHollowRIGHT', 'Monkey_Face_Hollow.obj', 'blank_face.jpg', 15, 180, 17.0, 5, -1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 11.7, -8.07972, 5.0, 3.0], 8.5, 0.5, 0.5);
+	
+	var CastoriaBollowLeftWall = new stimulus('CastoriaBollowLeftWall', 'castoria_bollow.obj', 'castoria_2.jpg', 1, 90, 15, 2.5, 1, 20, 31, [-5.950702, 1.673412, 1.418438], [-3.55, 2.0, -12.64, -8.94, 2.0, -7.20], 15, 0.4, 0.4);
+	
+	var CastoriaBollowRightWall = new stimulus('CastoriaBollowRightWall', 'castoria_bollow.obj', 'castoria_2.jpg', 1, 90, 15, 2.5, -1, 20, 31, [-5.950702, 1.673412, 1.418438], [-3.79, 2.0, 15.15, -8.91, 2.0, 9.95], 15, 0.4, 0.4);
+	
+	var CastoriaBollowLEFT = new stimulus('CastoriaBollowLEFT', 'castoria_bollow.obj', 'castoria_2.jpg', 1, 90, 15, 2.5, 1, 20, 31, [-5.950702, 1.673412, 1.418438], [-5.2918, 0, 0.1146, -9.6484, 0, -5.6206], 15, 0.4, 0.4);
+	
+	var CastoriaBollowRIGHT = new stimulus('CastoriaBollowRIGHT', 'castoria_bollow.obj', 'castoria_2.jpg', 1, 90, 15, 2.5, -1, 20, 31, [-5.950702, 1.673412, 1.418438], [-4.7849, 0, 2.2015, -9.6530, 0, 8.3807], 15, 0.4, 0.4);
+	
+	var CastoriaHollowRightWall = new stimulus('CastoriaHollowRightWall', 'castoria_hollow.obj', 'castoria_2.jpg', 1, -90, 15, 2.5, 1, 16, 31, [-3.542471, -0.005478, 0.00019], [-0.912, 0.0, -14.87, -6.76, 0.0, -8.99], 15, 0.4, 0.4);
+	
+	var CastoriaHollowLeftWall = new stimulus('CastoriaHollowLeftWall', 'castoria_hollow.obj', 'castoria_2.jpg', 1, -90, 15, 2.5, -1, 16, 31, [-3.542471, -0.005478, 0.00019], [-1.11, 0.0, 14.6, -6.5, 0.0, 9.28], 15, 0.4, 0.4);
+	
+	var CastoriaHollowLEFT = new stimulus('CastoriaHollowLEFT', 'castoria_hollow.obj', 'castoria_2.jpg', 1, -90, 15, 2.5, 1, 16, 31, [-3.542471, -0.005478, 0.00019], [-3.6718, -1.0934, 1.4608, -7.6879, -1.0934, 6.9841], 15, 0.4, 0.4);
+	
+	var CastoriaHollowRIGHT = new stimulus('CastoriaHollowRIGHT','castoria_hollow.obj', 'castoria_2.jpg', 1, -90, 15, 2.5, -1, 16, 31, [-3.542471, -0.005478, 0.00019], [-3.2602, -1.0934, -1.0608, -7.6862, -1.0934, -7.0838], 15, 0.4, 0.4);
+	
+	var CoconutShallowLEFT = new stimulus('CastoriaHollowRIGHT', 'coconut_shallow.obj', 'coconut_4.jpg', 10, -90, 40.0, 5, 1, 10, 3.8, [-1.041337, 0, 0], [-0.535, 0.0, -1.6, -0.53265, 0.0, 1.65748], 20.0, 0.1, 0.1, 0.12, 0.12);
+	
+	var CoconutShallowRIGHT = new stimulus('CoconutShallowRIGHT', 'coconut_shallow.obj', 'coconut_4.jpg', 10, -90, 40.0, 5, -1, 10, 3.8, [-1.041337, 0, 0], [-0.535, 0.0, 1.6, -0.53265, 0.0, -1.65748], 20.0, 0.1, 0.1, 0.12, 0.12);
+	
+	var HalfAppleExtremesLEFT = new stimulus('HalfAppleExtremesLEFT', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 5.5, 1, 10, 10, [-2.568784, -0.669885, -3.27716], [1.46237, 0.0, -1.75, -6.55508, -0.0, -1.75], 22.5, 0.25, 0.25, 0.325, 0.325);
+	
+	var HalfAppleExtremesRIGHT = new stimulus('HalfAppleExtremesRIGHT', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 5.5, -1, 10, 10, [-2.568784, -0.669885, -3.27716], [1.46237, 0.0, -1.75, -6.55508, -0.0, -1.75], 22.5, 0.25, 0.25, 0.325, 0.325);
+	
+	var HalfAppleLEFT = new stimulus('HalfAppleLEFT', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 5.5, 1, 10, 10, [-2.568784, -0.669885, -3.27716], [-2.56, -0.0, -1.75, -6.55508, -0.0, -1.75], 22.5, 0.25, 0.25, 0.325, 0.325);
+	
+	var HalfAppleCENTER1 = new stimulus('HalfAppleCENTER1', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 5.5, -1, 10, 10, [-2.568784, -0.669885, -3.27716], [-2.56, -0.0, -1.75, -6.55508, -0.0, -1.75], 22.5, 0.25, 0.25, 0.325, 0.325);
+	
+	var HalfAppleCENTER2 = new stimulus('HalfAppleCENTER2', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 5.5, 1, 10, 10, [-2.568784, -0.669885, -3.27716], [-2.56, -0.0, -1.75, 1.46237, 0.0, -1.75], 22.5, 0.25, 0.25, 0.325, 0.325);
+	
+	var HalfAppleRIGHT = new stimulus('HalfAppleRIGHT', 'half_apple_4.obj', 'half_apple_4.jpg', 96, 0, 45.0, 5.5, -1, 10, 10, [-2.568784, -0.669885, -3.27716], [-2.56, -0.0, -1.75, 1.46237, 0.0, -1.75], 22.5, 0.25, 0.25, 0.325, 0.325);
+	
+	var HumanFaceBollowEyebrowLEFT = new stimulus('HumanFaceBollowEyebrowLEFT', 'human_face_bollow.obj', 'human_face.jpg', 1, 0, 20.0, 5, 1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0, -1.4867, 4.2068, 0], 11.0, 0.1, 0.1);
+	
+	var HumanFaceBollowEyebrowRIGHT = new stimulus('HumanFaceBollowEyebrowRIGHT', 'human_face_bollow.obj', 'human_face.jpg', 1, 0, 20.0, 5, -1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0, -1.4867, 4.2068, 0], 11.0, 0.1, 0.1);
+	
+	var HumanFaceBollowLEFT = new stimulus('HumanFaceBollowLEFT', 'human_face_bollow.obj', 'human_face.jpg', 1, 0, 20.0, 5, 1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.351, -1.6367, 2.2068, -0.1603], 11.0, 0.125, 0.125);
+
+	var HumanFaceBollowRIGHT = new stimulus('HumanFaceBollowRIGHT', 'human_face_bollow.obj', 'human_face.jpg', 1, 0, 20.0, 5, -1, 13.5, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.351, 1.7667, 2.2068, -0.0722], 11.0, 0.125, 0.125);
+	
+	var HumanFaceHollowEyebrowLEFT = new stimulus('HumanFaceHollowEyebrowLEFT', 'human_face_hollow.obj', 'human_face.jpg', 16, 180, 20.0, 5, 1, 12, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0.1, -1.4867, 4.2068, 0.1], 10.0, 0.1, 0.1);
+	
+	var HumanFaceHollowEyebrowRIGHT = new stimulus('HumanFaceHollowEyebrowRIGHT', 'human_face_hollow.obj', 'human_face.jpg', 16, 180, 20.0, 5, -1, 12, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0.1, -1.4867, 4.2068, 0.1], 10.0, 0.1, 0.1);
+	
+	var HumanFaceHollowLEFT = new stimulus('HumanFaceHollowLEFT', 'human_face_hollow.obj', 'human_face.jpg', 16, 180, 20.0, 5, 1, 12, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.505, 1.5367, 2.2068, 0.3693], 10.0, 0.1, 0.1);
+	
+	var HumanFaceHollowRIGHT = new stimulus('HumanFaceHollowRIGHT', 'human_face_hollow.obj', 'human_face.jpg', 16, 180, 20.0, 5, -1, 12, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.505, -1.4367, 2.2068, 0.303], 10.0, 0.1, 0.1);
+	
+	var MonkeyToyLEFT = new stimulus('MonkeyToyLEFT', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 5.5, 1, 10, 10.8, [0, 0, 0], [2.0, -1.3339, 0, 1.50413, -0.7, 4.79006], 22.5, 0.25, 0.25, 0.3, 0.3);
+	
+	var MonkeyToyCENTER1 = new stimulus('MonkeyToyCENTER1', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 5.5, -1, 10, 10.8, [0, 0, 0], [2.0, -1.3339, 0, 1.50413, -0.7, 4.79006], 22.5, 0.25, 0.25, 0.3, 0.3);
+	
+	var MonkeyToyCENTER2 = new stimulus('MonkeyToyCENTER2', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 5.5, 1, 10, 10.8, [0, 0, 0], [2.0, -1.3339, 0, 1.50413, -0.7, -4.77867], 22.5, 0.25, 0.25, 0.3, 0.3);
+	
+	var MonkeyToyRIGHT = new stimulus('MonkeyToyRIGHT', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 5.5, -1, 10, 10.8, [0, 0, 0], [2.0, -1.3339, 0, 1.50413, -0.7, -4.77867], 22.5, 0.25, 0.25, 0.3, 0.3);
+	
+	var MonkeyToyExtremesLEFT = new stimulus('MonkeyToyExtremesLEFT', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 5.5, 1, 10, 10.8, [0, 0, 0], [1.50413, -0.7, 4.79006, 1.50413, -0.7, -4.77867], 22.5, 0.25, 0.25, 0.3, 0.3);
+	
+	var MonkeyToyExtremesRIGHT = new stimulus('MonkeyToyExtremesRIGHT', 'MonkeyToy3.obj', 'MonkeyToy3.jpg', 96, -90, 45.0, 5.5, -1, 10, 10.8, [0, 0, 0], [1.50413, -0.7, 4.79006, 1.50413, -0.7, -4.77867], 22.5, 0.25, 0.25, 0.3, 0.3);
+	
+	var MonkeyFaceBlankBollowLEFT = new stimulus('MonkeyFaceBlankBollowLEFT', 'Monkey_Face_Bollow.obj', 'Blank_Monkey.jpg', 15, 0, 20.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 11, -9.17972, 5.0, 1.4087], 10.0, 0.4, 0.4);
+	
+	var MonkeyFaceBlankBollowRIGHT = new stimulus('MonkeyFaceBlankBollowRIGHT', 'Monkey_Face_Bollow.obj', 'Blank_Monkey.jpg', 15, 0, 20.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [1.6625, -1.8, 10.8, 8.29647, 4.0, 1.4036], 10.0, 0.4, 0.4);
+	
+	var MonkeyFaceBlankHollowLEFT = new stimulus('MonkeyFaceBlankHollowLEFT', 'Monkey_Face_Hollow.obj', 'Blank_Monkey.jpg', 15, 180, 17.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [-3.5, 0.46, 8.471, 8.29647, 4.0, 1.6], 8.5, 0.5, 0.5);
+	
+	var MonkeyFaceBlankHollowRIGHT = new stimulus('MonkeyFaceBlankHollowRIGHT', 'Monkey_Face_Hollow.obj', 'Blank_Monkey.jpg', 15, 180, 17.0, 5, -1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [4.51, 0.11, 7.96, -8.07972, 5.0, 2.9], 8.5, 0.5, 0.5);
+	
+	var MonkeyFaceBollowOffSnoutLEFT = new stimulus('MonkeyFaceBollowOffSnoutLEFT', 'Monkey_Face_Bollow.obj', 'Monkey_Face_Bollow.jpg', 15, 0, 20.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [4.318, -0.44, 8.075, -9.57972, 5.0, 1.1087], 10.0, 0.4, 0.4);
+	
+	var MonkeyFaceBollowOffSnoutRIGHT = new stimulus('MonkeyFaceBollowOffSnoutRIGHT', 'Monkey_Face_Bollow.obj', 'Monkey_Face_Bollow.jpg', 15, 0, 20.0, 5, -1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [-2.78, -0.09, 8.823, 8.89647, 4.0, 0.6036], 10.0, 0.4, 0.4);
+	
+	var MonkeyFaceBollowLEFT = new stimulus('MonkeyFaceBollowLEFT', 'Monkey_Face_Bollow.obj', 'Monkey_Face_Bollow.jpg', 15, 0, 20.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 11, -9.17972, 5.0, 1.4087], 10.0, 0.4, 0.4);
+	
+	var MonkeyFaceBollowRIGHT = new stimulus('MonkeyFaceBollowRIGHT', 'Monkey_Face_Bollow.obj', 'Monkey_Face_Bollow.jpg', 15, 0, 20.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [1.6625, -1.8, 10.8, 8.29647, 4.0, 1.4036], 10.0, 0.4, 0.4);
+	
+	var MonkeyFaceHollowOffSnoutLEFT = new stimulus('MonkeyFaceHollowOffSnoutLEFT', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [-3.5, 0.46, 8.471, 8.29647, 4.0, 1.6], 8.5, 0.5, 0.5);
+	
+	var MonkeyFaceHollowOffSnoutRIGHT = new stimulus('MonkeyFaceHollowOffSnoutRIGHT', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 5, -1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [4.51, 0.11, 7.96, -8.07972, 5.0, 2.9], 8.5, 0.5, 0.5);
+	
+	var MonkeyFaceHollowLEFT = new stimulus('MonkeyFaceHollowLEFT', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 11.7, 8.29647, 4.0, 1.8], 8.5, 0.5, 0.5);
+	
+	var MonkeyFaceHollowRIGHT = new stimulus('MonkeyFaceHollowRIGHT', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 5, -1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 11.7, -8.07972, 5.0, 3.0], 8.5, 0.5, 0.5);
+	
+	var WholeAppleLEFT = new stimulus('WholeAppleLEFT', 'apple_18.obj', 'apple_18.jpg', 96, -90, 0, 5, 1, 10, 10, [-2.560498, -2.405302, -1.549059], [0.1038, -1.9658, -5.3794, 1.6837, -1.9658, 0.1910], 15.0, 0.35, 0.35, 0.4, 0.4);
+	
+	var WholeAppleRIGHT = new stimulus('WholeAppleRIGHT', 'apple_18.obj', 'apple_18.jpg', 96, -90, 0, 5, -1, 10, 10, [-2.560498, -2.405302, -1.549059], [1.4038, -1.9658, -3.7794, 0.8737, -1.9658, 1.5910], 15.0, 0.35, 0.35, 0.4, 0.4);
+	
+	var UpsideDownFaceHollowLEFT = new stimulus('UpsideDownFaceHollowLEFT', 'human_face_ud.obj', 'human_face.jpg', 16, 180, 20.0, 5, 1, 12, 6.64, [0.09701, 1.960507, 0.19454], [0.03, 2.705, 0.8505, 1.3367, 2.7068, 0.0993], 10.0, 0.1, 0.1);
+	
+	var UpsideDownFaceHollowRIGHT = new stimulus('UpsideDownFaceHollowRIGHT', 'human_face_ud.obj', 'human_face.jpg', 16, 180, 20.0, 5, 1, 12, 6.64, [0.09701, 1.960507, 0.19454], [-0.03, 2.705, 0.8505, -1.3367, 2.7068, 0.0993], 10.0, 0.1, 0.1);
+
+	var UpsideDownBlankFaceHollowLEFT = new stimulus('UpsideDownBlankFaceHollowLEFT', 'human_face_ud.obj', 'blank_face.jpg', 16, 180, 20.0, 5, 1, 12, 6.64, [0.09701, 1.960507, 0.19454], [0.03, 2.705, 0.8505, 1.3367, 2.7068, 0.0993], 10.0, 0.1, 0.1);
+	
+	var UpsideDownBlankFaceHollowRIGHT = new stimulus('UpsideDownBlankFaceHollowRIGHT', 'human_face_ud.obj', 'blank_face.jpg', 16, 180, 20.0, 5, 1, 12, 6.64, [0.09701, 1.960507, 0.19454], [-0.03, 2.705, 0.8505, -1.3367, 2.7068, 0.0993], 10.0, 0.1, 0.1);
+
+	var PotatoLeft = new stimulus('PotatoLeft', 'potato_repaired.obj', 'potato_texture_Original.jpg', 16, 0.0, 20.0, 5, 1, 15, 10, [0, 1.960507, 1.7], [0.3, 2.705, 1.5, 1.6367, 2.7068, 0.453], 10.0, 0.15, 0.09);
+	
+	var PotatoRight = new stimulus('PotatoRight', 'potato_repaired.obj', 'potato_texture_Original.jpg', 16, 180.0, 20.0, 5, 1, 15, 10, [0, 1.960507, 1.7], [0.3, 2.705, 1.5, -1.6367, 2.7068, 0.453], 10.0, 0.15, 0.09);
+	
+	var ConcaveOvoidLeft = new stimulus('ConcaveOvoidLeft', 'ovoid.obj', 'depth.jpg', 16, 0, 25.0, 5, 1, 2.25, 1, [0, 0, -0.5], [0, 0, -0.5, -1.7, 0 ,0.55], 10.0, 0.075, 0.075);
+	
+	var ConcaveOvoidRight = new stimulus('ConcaveOvoidRight', 'ovoid.obj', 'depth.jpg', 16, 0, 25.0, 5, 1, 2.25, 1, [0, 0, -0.5], [0, 0, -0.5, 1.7, 0 ,0.55], 10.0, 0.075, 0.075);
+	
+	
+	
+		if (expPhase == 'part1') {
+		// only unambiguous stimuli
+		//stimList = [BananaExtremesLEFT, BananaExtremesRIGHT, BananaLEFT, BananaCENTER1, BananaCENTER2, BananaRIGHT, BananaFlatLEFT, BananaFlatCENTER1, BananaFlatCENTER2, BananaFlatRIGHT,  CoconutShallowLEFT, CoconutShallowRIGHT, HalfAppleExtremesLEFT, HalfAppleExtremesRIGHT, HalfAppleLEFT, HalfAppleCENTER1, HalfAppleCENTER2, HalfAppleRIGHT, MonkeyToyLEFT, MonkeyToyCENTER1, MonkeyToyCENTER2, MonkeyToyRIGHT, MonkeyToyExtremesLEFT, MonkeyToyExtremesRIGHT, WholeAppleLEFT, WholeAppleRIGHT];
+		stimList = [PotatoLeft, PotatoLeft, PotatoRight, PotatoRight];
+//		stimList = [BananaExtremesLEFT, BananaExtremesRIGHT, BananaLEFT, BananaRIGHT, BananaCENTER1, BananaCENTER2, BananaFlatLEFT, BananaFlatRIGHT, BananaFlatCENTER1, BananaFlatCENTER2];
+	} else if (expPhase == 'part2a') {
+		// only illusory stimuli
+		stimList = [BlankFaceHollowLEFT, BlankFaceHollowRIGHT, CastoriaBollowLEFT, CastoriaBollowRIGHT, HumanFaceHollowLEFT, HumanFaceHollowRIGHT, MonkeyFaceHollowOffSnoutLEFT, MonkeyFaceHollowOffSnoutRIGHT, UpsideDownFaceHollowLEFT, UpsideDownFaceHollowRIGHT, ConcaveOvoidLeft, ConcaveOvoidRight, UpsideDownBlankFaceHollowLEFT, UpsideDownBlankFaceHollowRIGHT, MonkeyFaceBlankHollowLEFT, MonkeyFaceBlankHollowRIGHT];
+		//stimCheck = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // --- no idea what this is for
+	} else if (expPhase == 'part2b') {
+    	// catch phase - only unambiguous stimuli 
+		stimList = [BlankFaceBollowLEFT, CastoriaHollowLEFT, CastoriaHollowRIGHT, HumanFaceBollowLEFT, HumanFaceBollowRIGHT, MonkeyFaceBollowLEFT, MonkeyFaceBollowRIGHT, MonkeyFaceBlankBollowRIGHT];
+	}
