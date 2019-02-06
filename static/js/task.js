@@ -132,7 +132,7 @@ var ThreeDExperiment = function(expPhase) {
 	var listening = false;
 
     var randStim, catchStimNumber = 0, trialNum = 0, correctCounter = 0, scene, objGroup, stimMesh, redDotMesh, greenDotMesh, redMat, greenMat, camera, num_change_dir, framerate = 10, currStim;
-    var response, theta = 0, moving, rotDelta, rotDir, aframe, responseDiv, redDotCenter, greenDotCenter, respCorrect, reactionTimeStart, reactionTimeEnd;
+    var response, theta = 0, moving, rotDelta, rotDir, aframe, responseDiv, loaderCircle, loadingDone, redDotCenter, greenDotCenter, respCorrect, reactionTimeStart, reactionTimeEnd;
     
     var lightPos = [], spotLights = [], ambLight;
     
@@ -334,7 +334,9 @@ var ThreeDExperiment = function(expPhase) {
 	var stimCheck = [];
 	if (expPhase == 'part1') {
 		// only unambiguous stimuli
-		stimList = [BananaExtremes, BananaCenterLeft, BananaCenterRight, BananaFlatCenterLeft1, BananaFlatCenterRight1, BananaFlatCenterLeft2, BananaFlatCenterRight2, HalfAppleExtremes, HalfAppleCenterLeft, HalfAppleCenterRight, WholeAppleCenterLeft, WholeAppleCenterRight, CoconutShallowExtremes, MonkeyToyExtremes, MonkeyToyCenterLeft, MonkeyToyCenterRight];
+		// removing BananaFlatCenterRight1 as it is ambiguous
+		//stimList = [BananaExtremes, BananaCenterLeft, BananaCenterRight, BananaFlatCenterLeft1, BananaFlatCenterRight1, BananaFlatCenterLeft2, BananaFlatCenterRight2, HalfAppleExtremes, HalfAppleCenterLeft, HalfAppleCenterRight, WholeAppleCenterLeft, WholeAppleCenterRight, CoconutShallowExtremes, MonkeyToyExtremes, MonkeyToyCenterLeft, MonkeyToyCenterRight];
+		stimList = [BananaExtremes, BananaCenterLeft, BananaCenterRight, BananaFlatCenterLeft1, BananaFlatCenterLeft2, BananaFlatCenterRight2, HalfAppleExtremes, HalfAppleCenterLeft, HalfAppleCenterRight, WholeAppleCenterLeft, WholeAppleCenterRight, CoconutShallowExtremes, MonkeyToyExtremes, MonkeyToyCenterLeft, MonkeyToyCenterRight];
 		
 		// this is a list of all stimuli ---- just so we have it
 		//stimList = [BananaExtremes, BananaCenterLeft, BananaCenterRight, BananaFlatCenterLeft1, BananaFlatCenterRight1, BananaFlatCenterLeft2, BananaFlatCenterRight2, HalfAppleExtremes, HalfAppleCenterLeft, HalfAppleCenterRight, WholeAppleCenterLeft, WholeAppleCenterRight, CoconutShallowExtremes, MonkeyToyExtremes, MonkeyToyCenterLeft, MonkeyToyCenterRight, BlankFaceHollowCenterLeft, BlankFaceHollowCenterRight, UpsideDownBlankFaceHollowCenterLeft, UpsideDownBlankFaceHollowCenterRight, HumanFaceHollowCenterLeft, HumanFaceHollowCenterRight, UpsideDownHumanFaceHollowCenterLeft, UpsideDownHumanFaceHollowCenterRight, MonkeyFaceBlankHollowOffSnoutLeft, MonkeyFaceBlankHollowOffSnoutRight, MonkeyFaceHollowOffSnoutLeft, MonkeyFaceHollowOffSnoutRight, CastoriaRevPersCenterLeftStr, CastoriaRevPersCenterRightStr, ConcaveOvoidCenterLeft, ConcaveOvoidCenterRight, BlankHumanFaceBollowCenterLeft, BlankHumanFaceBollowCenterRight, HumanFaceBollowCenterLeft, HumanFaceBollowCenterRight, MonkeyFaceBollowCenterLeft, MonkeyFaceBollowCenterRight, CastoriaProperPerspCenterLeftStr, CastoriaProperPerspCenterRightStr];
@@ -350,6 +352,16 @@ var ThreeDExperiment = function(expPhase) {
 
     // function where we initialize the general 3D settings
     if (debug_ON) var tempStimNum = 0;
+    
+    var addLoaderCircle = function () {
+        // add loader and make invisible
+    	loaderCircle = document.createElement('div');
+		loaderCircle.setAttribute("id", "loader");
+		loaderCircle.setAttribute("class", "loader");
+		//loaderCircle.setAttribute("style","animation: spin 2s linear infinite;");
+		document.getElementById("trial").appendChild(loaderCircle);
+		loadingDone = false;
+    }
     
 	var threeDstuff = function() {
         // init vars
@@ -531,30 +543,51 @@ var ThreeDExperiment = function(expPhase) {
 		// placed the loader in a wrapper function so that rotation doesn't start until the object is loaded. 
 		// This can be a problem on computers with slower connection or high cpu load. 
 		function createObjects() {
-	        loader.load("../static/images/objects/" + currStim.obj.file_name, function (object) {
-	            object.children.forEach(function(child) {
-	                child.geometry.computeFaceNormals();
-	                //child.geometry.computeVertexNormals(); // disabled because you see the blocky faces with this on
-	
-	                child.geometry.center();
-	                child.geometry.verticesNeedUpdate = true;
-	                
-	                child.material.opacity = 0.2;
-	            });
-	
-	            // add texture
-	            stimMesh = createMesh(object.children[0].geometry, currStim.obj.tex_file_name);
-	            
-	            // scale to a good size
-				stimMesh.scale.set(currStim.obj.scaling, currStim.obj.scaling, currStim.obj.scaling);
-				objGroup.add( stimMesh );
-				stimMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
-					-currStim.obj.center[0], -currStim.obj.center[1], -currStim.obj.center[2]));
-	        });
+
+	        loader.load("../static/images/objects/" + currStim.obj.file_name, 
+	        	function (object) {
+	        		// on load - remove loader circle
+	        		document.getElementById("loader").setAttribute("style", "display: none");
+	        		
+	        		// function to be executed upon obj file successful load
+		            object.children.forEach(function(child) {
+		                child.geometry.computeFaceNormals();
+		                //child.geometry.computeVertexNormals(); // disabled because you see the blocky faces with this on
+		
+		                child.geometry.center();
+		                child.geometry.verticesNeedUpdate = true;
+		                
+		                child.material.opacity = 0.2;
+		            });
+		
+		            // add texture
+		            stimMesh = createMesh(object.children[0].geometry, currStim.obj.tex_file_name);
+		            
+		            // scale to a good size
+					stimMesh.scale.set(currStim.obj.scaling, currStim.obj.scaling, currStim.obj.scaling);
+					objGroup.add( stimMesh );
+					stimMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
+						-currStim.obj.center[0], -currStim.obj.center[1], -currStim.obj.center[2]));
+	        	}, 
+	        	function (xhr) {
+	        		// fn to use during loading
+	    			document.getElementById("loader").setAttribute("style", "display: block");
+
+	        		console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+	        	}, 
+	        	function (error) {
+	        		// function to handle errors
+	        		console.log( 'An error happened: ' + error.message);
+	        		
+	        		alert('Error Loading 3D Object: ' + error.message);
+	        	});
+
         	return true;
 		}
 		
-		if (createObjects()) scene.add( objGroup );
+		if (createObjects()) {
+			scene.add( objGroup );
+		}
 
         // add dots to objGroup before we start transforming the object since that is easier
         // than trying to figure out the transformations to position the dots correctly
@@ -575,6 +608,14 @@ var ThreeDExperiment = function(expPhase) {
 		}
     }
 
+	function wait(ms){
+		var start = new Date().getTime();
+		var end = start;
+		while(end < start + ms) {
+	   		end = new Date().getTime();
+		}
+	}
+
     function addLights() {
         // add 4 spotlights
         lightPos = [new THREE.Vector3(0, 50, 25),
@@ -587,13 +628,13 @@ var ThreeDExperiment = function(expPhase) {
         for (i=0; i<lightPos.length; i++) {
             spotLights[i] = new THREE.SpotLight(currStim.light);
             spotLights[i].position.set(lightPos[i].x, lightPos[i].y, lightPos[i].z);
-            spotLights[i].intensity = 1;
+            spotLights[i].intensity = 0.5;
             scene.add(spotLights[i]);
         }
-        
+
         // if necessary add some ambient light
-        //ambLight = new THREE.AmbientLight(0x404040);
-        //scene.add(ambLight);
+        ambLight = new THREE.AmbientLight(0x999999, 0.05);
+        scene.add(ambLight);
     }
 
 	function addDots(){
@@ -913,6 +954,8 @@ var ThreeDExperiment = function(expPhase) {
     incorrectAudio.setAttribute("src","../static/sounds/error.wav");
     document.getElementById("3dstuff").appendChild(incorrectAudio);
 
+	addLoaderCircle();
+
     // start trial
     threeDstuff();
 };
@@ -1070,7 +1113,7 @@ var Questionnaire = function() {
 			}
 			
 			if (curr_q_ans == "yes") {
-				curr_q_ans = [1,"","",""];
+				curr_q_ans = [1, 0, 0, 0];
 				
 				// answer is  yes - validate optional questions too
 				// loop through the optional questions
@@ -1078,7 +1121,7 @@ var Questionnaire = function() {
 					q_objs[z+1] = document.getElementsByName(q_opt[z] + g);
 				
 					for (var i=0; i<q_objs[z+1].length; i++) {
-						if (q_objs[z+1][i].checked) curr_q_ans[z+1] = q_objs[z+1][i].value;
+						if (q_objs[z+1][i].checked) curr_q_ans[z+1] = parseInt(q_objs[z+1][i].value);
 					}
 					
 					if (curr_q_ans[z+1].length == 0) {
@@ -1094,9 +1137,10 @@ var Questionnaire = function() {
 		}
 		
 		// store data 
-		var tmpData = [];
+		var tmpData = {};
+		tmpData['phase'] = "pdi";
 		for (var uu=0; uu<q_ans.length; uu++) {
-			tmpData.push('pdi_q_' + eval(uu+1), q_ans[uu]);
+			tmpData['pdi_q_' + eval(uu+1)] = q_ans[uu];
 		}
 		psiTurk.recordTrialData(tmpData);
 		psiTurk.saveData();
@@ -1281,9 +1325,10 @@ var TheEnd = function() {
 		psiTurk.saveData({
 			success: function() {
 			    clearInterval(reprompt); 
-                psiTurk.computeBonus('compute_bonus', function(){
+			    // bonus not needed and also causes it to crash
+                //psiTurk.computeBonus('compute_bonus', function(){
                 	psiTurk.completeHIT(); // when finished saving compute bonus, the quit
-                }); 
+                //}); 
 
 
 			}, 
@@ -1299,9 +1344,10 @@ var TheEnd = function() {
 	   // record_responses();
 	    psiTurk.saveData({
             success: function(){
-                psiTurk.computeBonus('compute_bonus', function() { 
+            	// bonus not needed and also causes it to crash
+                //psiTurk.computeBonus('compute_bonus', function() { 
                 	psiTurk.completeHIT(); // when finished saving compute bonus, the quit
-                }); 
+                //}); 
             }, 
             error: prompt_resubmit});
 	});

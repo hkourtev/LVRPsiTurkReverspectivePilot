@@ -163,22 +163,27 @@ experimentDF.to_csv('trial_data.csv')
 
 # now the PDI questionnaire answers
 # create arrays which will store data and will be writen to tables later on (possibly)
-pdi = {'pdi_answers' : []}
+pdi = {'unique_id' : [], 'ans1' : [], 'ans2' : [], 'ans3' : [], 'ans4' : []}
 
 # get user experiment data
 for uid in df['uniqueid'].unique():
-	tmpPDI = df[(df.uniqueid == uid)][['pdi_q_1', 'pdi_q_2', 'pdi_q_3', 'pdi_q_4', 'pdi_q_5', \
+	tmpPDI = df[((df.uniqueid == uid) & (df.phase == 'pdi'))][['pdi_q_1', 'pdi_q_2', 'pdi_q_3', 'pdi_q_4', 'pdi_q_5', \
 		'pdi_q_6', 'pdi_q_7', 'pdi_q_8', 'pdi_q_9', 'pdi_q_10', 'pdi_q_11', 'pdi_q_12', \
 		'pdi_q_13', 'pdi_q_14', 'pdi_q_15', 'pdi_q_16', 'pdi_q_17', 'pdi_q_18', \
 		'pdi_q_19', 'pdi_q_20', 'pdi_q_21']]
 
 	for e in tmpPDI.index:
-		pdi['unique_id'].append(uid)
-		pdi['answers'].append(tmpPDI['pdi_q_' + str(e+1)][e])
+		res_size = tmpPDI.shape;
+		for j in range(res_size[1]):
+			pdi['unique_id'].append(uid)
+			pdi['ans1'].append(tmpPDI['pdi_q_' + str(j+1)][e][0])
+			pdi['ans2'].append(tmpPDI['pdi_q_' + str(j+1)][e][1])
+			pdi['ans3'].append(tmpPDI['pdi_q_' + str(j+1)][e][2])
+			pdi['ans4'].append(tmpPDI['pdi_q_' + str(j+1)][e][3])
 
 		
 # create data frames out of our arrays so we can easily export the data to CSV
-pdiDF = pd.DataFrame(experiment, columns=['unique_id', 'answers'])
+pdiDF = pd.DataFrame(pdi, columns=['unique_id', 'ans1', 'ans2', 'ans3', 'ans4'])
 
 # export data to csv files
 pdiDF.to_csv('pdi_questionnaire_data.csv')
