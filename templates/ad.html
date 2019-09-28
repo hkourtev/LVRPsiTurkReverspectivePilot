@@ -50,6 +50,49 @@
 				margin-top: 0px;
 			}
 		</style>
+		<script type="text/javascript">
+	    	function testSpeed() {
+	    	// Let's initialize the primitives
+			var startTime, endTime, fileSize;
+			
+			// Set up the AJAX to perform
+			var xhr = new XMLHttpRequest();
+			
+			// Rig the call-back... THE important part
+			xhr.onreadystatechange = function () {
+			  // update text to let user know we are doing something
+			  var textObj = document.getElementById("conspeed");
+			  textObj.textContent = " -- testing speed, please wait -- ";
+			
+			  // we only need to know when the request has completed
+			  if (xhr.readyState === 4 && xhr.status === 200) {
+			
+			    // Here we stop the timer & register end time
+			    endTime = (new Date()).getTime();
+			
+			    // Also, calculate the file-size which has transferred
+			    fileSize = xhr.responseText.length;
+			
+			    // Calculate the connection-speed in megabits
+			    var speed = ((fileSize) / ((endTime - startTime)/1000) / 1024)/1024;
+			
+			    // Report the result, or have fries with it...
+			    console.log(Math.round(speed) + " Mbps\n");
+			    
+			    // update text
+			    textObj.textContent = Math.round(speed) + " Mbps";
+			  }
+			}
+			
+			// Snap back; here's where we start the timer
+			startTime = (new Date()).getTime();
+			
+			// All set, let's hit it!
+			xhr.open("GET", 'http://' + window.location.hostname + ':8081/static/images/objects/human_face_bollow.obj', true);
+			xhr.overrideMimeType('text/plain; charset=x-user-defined');
+			xhr.send();
+	    	}
+	    </script>
 	</head>
 	<body>
 		<div id="container-not-an-ad" class="media">
@@ -71,10 +114,10 @@
 
 							    <h1>Call for participants</h1>
 							    <p>
-									The XXX Lab at XXXXX University is looking for online participants 
+									The Laboratory of Vision Research (LVR) at Rutgers University is looking for online participants 
 									for a brief psychology experiment. The only requirements 
 									are that you are at least 18 years old and are a fluent English 
-									speaker.  The task will take XXXXX minutes and will pay XXXXX.
+									speaker.  The task will take 30-60 minutes (depending on internet connection speed) and will pay $4.00.
 							    </p>
 							    <div class="alert alert-danger">
 									<strong>This task can only be completed once.</strong> 
@@ -86,7 +129,18 @@
 								    Otherwise, please click the "Accept HIT" button on the Amazon site 
 								    above to begin the task.
 								</p>
-							    
+								<div class="alert alert-warning" style="color:red;">
+							    	<b>IMPORTANT (Please Read Carefully):</b><br />
+							    	<ul>
+							    	<li><b>This experiment includes a lot of graphics and requires a broadband internet connection. <br />
+							    	Please stop all downloads and other programs that may be using your internet connection. 
+							    	If you do not, items may take a long time to load, so the experiment will take longer and it will also be frustrating for you.</b></li>
+							    	<li><b>RECOMMENDED INTERNET CONNECTION SPEED IS 5 Mbps (mega-bits-per-second) or faster. <br />
+							    	Your Connection Speed is: <span id="conspeed">-- not tested --</span> 
+							    	(<a onClick="testSpeed();">Click here to test your connection speed.</a>)<br />
+							    	Please test multiple times. Click and be patient while your speed is calculated. Speed will vary each time you test. Take the average of all readings.</b></li>
+							    	</ul>
+							    </div>
 
 							{% else %}
 
@@ -110,13 +164,32 @@
 							    <p>
 							    	Please maximize the experiment window upon loading.
 							    </p>
+							    <p>
+							    	
+							    </p>
+
 							    <script type="text/javascript">
 									function openwindow() {
 							    		popup = window.open('{{ server_location }}/consent?hitId={{ hitid }}&assignmentId={{ assignmentid }}&workerId={{ workerid }}','Popup','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width='+1024+',height='+768+'');
 							  		}
 							    </script>
-							    <div class="alert alert-warning">
-							    	<b>Warning</b>: Please disable pop-up blockers before continuing.
+							    <div class="alert alert-warning" style="color:red;">
+							    	<b>IMPORTANT (Please Read Carefully):</b><br />
+							    	<ul>
+							    	<li><b>This experiment includes a lot of graphics and requires a broadband internet connection. <br />
+							    	Please stop all downloads and other programs that may be using your internet connection. 
+							    	If you do not, items may take a long time to load, so the experiment will take longer and it will also be frustrating for you.</b></li>
+							    	<li><b>RECOMMENDED INTERNET CONNECTION SPEED IS 5 Mbps (mega-bits-per-second) or faster. <br />Your Connection Speed is: <span id="conspeed">-- not tested --</span>
+							    	(<a onClick="testSpeed();">Click here to test your connection speed.</a>)<br />
+							    	Please test multiple times. Click and be patient while your speed is calculated. Speed will vary each time you test. Take the average of all readings.</b></li>
+							    	<li><b>PLEASE DO NOT RUN ON PHONE OR TABLET.</b> This experiment has not been designed to run on mobile devices. </li>
+							    	<li><b>PLEASE DISABLE POP-UP BLOCKERS BEFORE CONTINUING.</b> Clicking the button below will open a new window. If you have a pop-up blocker you may not be able to continue. Here are some instructions on how to do that for the most commonly used browsers: <br />
+							    		<ul><li><a href="https://support.google.com/chrome/answer/95472?co=GENIE.Platform%3DDesktop&hl=en" target="_blank">Google Chrome</a></li>
+							    		<li><a href="https://support.mozilla.org/en-US/kb/pop-blocker-settings-exceptions-troubleshooting" target="_blank">Mozilla Firefox</a></li>
+							    		<li><a href="https://www.technipages.com/safari-popup-blocker" target="_blank">Apple Safari</a></li>
+							    		<li><a href="https://support.microsoft.com/en-us/help/17479/windows-internet-explorer-11-change-security-privacy-settings" target="_blank">Microsoft Internet Explorer</a></li>
+							    		</ul>
+							    	</li>
 							    </div>
 							    
 						    	<button type="button" class="btn btn-primary btn-lg" onClick="openwindow();">

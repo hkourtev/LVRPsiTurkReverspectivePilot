@@ -96,7 +96,8 @@ function stimulus(stim_name, obj_file_name, obj_tex_file_name, obj_mtl_shin, obj
 		rot_num_change_dir: 3,
 		center: obj_center,
 		size: obj_size,
-		scaling: 1
+		scaling: 1,
+		load_time: 0
 	};
 
 	this.dots = {
@@ -140,7 +141,7 @@ var ThreeDExperiment = function(expPhase) {
     var debug_ON = false; camViewFromTop = false;
     
     // number of trials parameters MAKE SURE 2a trials == 2*number of stimuli
-	var maxNumTrialsPart1 = 65, corrNumTrialsPart1 = 8, numTrialsPart2a = 32, numTrialsPart2b = 8;
+	var maxNumTrialsPart1 = 100, corrNumTrialsPart1 = 8, numTrialsPart2a = 32, numTrialsPart2b = 8;
 
 	// create stimuli
 	
@@ -217,10 +218,10 @@ var ThreeDExperiment = function(expPhase) {
 	//var HumanFaceHollowEyebrowRIGHT = new stimulus('HumanFaceHollowEyebrowRIGHT', 'human_face_hollow.obj', 'human_face.jpg', 16, 180, 20.0, 5, -1, 12, 6.64, [0.09701, 2.760507, 0.19454], [1.6367, 4.2068, 0.1, -1.4867, 4.2068, 0.1], 10.0, 0.1, 0.1);
 	
 	// textured hollow human face with markers on nose and left cheek bone
-	var HumanFaceHollowCenterLeft = new stimulus('HumanFaceHollowLEFT', 'human_face_hollow.obj', 'human_face.jpg', 0.5, 180, 20.0, 5, 0, 12, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.505, 1.5367, 2.2068, 0.3693], 10.0, 0.1, 0.1);
+	var HumanFaceHollowCenterLeft = new stimulus('HumanFaceHollowCenterLeft', 'human_face_hollow.obj', 'human_face.jpg', 0.5, 180, 20.0, 5, 0, 12, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.505, 1.5367, 2.2068, 0.3693], 10.0, 0.1, 0.1);
 	
 	// textured hollow human face with markers on nose and right cheek bone
-	var HumanFaceHollowCenterRight = new stimulus('HumanFaceHollowRIGHT', 'human_face_hollow.obj', 'human_face.jpg', 0.5, 180, 20.0, 5, 0, 12, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.505, -1.4367, 2.2068, 0.303], 10.0, 0.1, 0.1);
+	var HumanFaceHollowCenterRight = new stimulus('HumanFaceHollowCenterRight', 'human_face_hollow.obj', 'human_face.jpg', 0.5, 180, 20.0, 5, 0, 12, 6.64, [0.09701, 2.760507, 0.19454], [0.08, 2.15, 1.505, -1.4367, 2.2068, 0.303], 10.0, 0.1, 0.1);
 	
 	// upside textured hollow human face with markers on nose and right cheek bone (our left)
 	var UpsideDownHumanFaceHollowCenterLeft = new stimulus('UpsideDownHumanFaceHollowCenterLeft', 'human_face_ud.obj', 'human_face.jpg', 0.5, 180, 20.0, 5, 0, 12, 6.64, [0.09701, 2.360507, 0.19454], [-0.1, 2.8, 1.48, 1.4367, 2.8068, 0.28], 10.0, 0.1, 0.1);
@@ -235,10 +236,10 @@ var ThreeDExperiment = function(expPhase) {
 	var MonkeyFaceBlankHollowOffSnoutRight = new stimulus('MonkeyFaceBlankHollowOffSnoutRight', 'Monkey_Face_Hollow.obj', 'Blank_Monkey.jpg', 15, 180, 17.0, 5, 0, 10, 21.7, [-0.217435, -0.403146, 4.528049], [4.51, 0.11, 7.96, -08.07972, 5.0, 2.9], 8.5, 0.5, 0.5);
 	
 	// textured hollow monkey face with markers on left cheek and right side of snout
-	var MonkeyFaceHollowOffSnoutLeft = new stimulus('MonkeyFaceHollowOffSnoutLEFT', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 5, 0, 10, 21.7, [-0.217435, -0.403146, 4.528049], [-3.5, 0.46, 8.471, 8.29647, 4.0, 1.6], 8.5, 0.5, 0.5);
+	var MonkeyFaceHollowOffSnoutLeft = new stimulus('MonkeyFaceHollowOffSnoutLeft', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 5, 0, 10, 21.7, [-0.217435, -0.403146, 4.528049], [-3.5, 0.46, 8.471, 8.29647, 4.0, 1.6], 8.5, 0.5, 0.5);
 	
 	// textured hollow monkey face with markers on right cheek and left side of snout
-	var MonkeyFaceHollowOffSnoutRight = new stimulus('MonkeyFaceHollowOffSnoutRIGHT', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 5, 0, 10, 21.7, [-0.217435, -0.403146, 4.528049], [4.51, 0.11, 7.96, -8.07972, 5.0, 2.9], 8.5, 0.5, 0.5);
+	var MonkeyFaceHollowOffSnoutRight = new stimulus('MonkeyFaceHollowOffSnoutRight', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 5, 0, 10, 21.7, [-0.217435, -0.403146, 4.528049], [4.51, 0.11, 7.96, -8.07972, 5.0, 2.9], 8.5, 0.5, 0.5);
 	
 	//var MonkeyFaceHollowCenterLeft = new stimulus('MonkeyFaceHollowCenterLeft', 'Monkey_Face_Hollow.obj', 'Monkey_Face_Hollow.jpg', 15, 180, 17.0, 5, 1, 12, 21.7, [-0.217435, -0.403146, 4.528049], [0.6625, -1.8, 11.7, 8.29647, 4.0, 1.8], 8.5, 0.5, 0.5);
 	
@@ -359,6 +360,7 @@ var ThreeDExperiment = function(expPhase) {
 		loaderCircle.setAttribute("id", "loader");
 		loaderCircle.setAttribute("class", "loader");
 		//loaderCircle.setAttribute("style","animation: spin 2s linear infinite;");
+		loaderCircle.setAttribute("style","margin: 0;");
 		document.getElementById("trial").appendChild(loaderCircle);
 		loadingDone = false;
     }
@@ -380,7 +382,6 @@ var ThreeDExperiment = function(expPhase) {
         		randStim = Math.floor(Math.random() * stimList.length);
         	} while (stimCheck[randStim] == 2);   
 			
-			randStim = Math.floor(Math.random() * stimList.length);
 			currStim = stimList[randStim];
 			
 			// keep track of how many times a stim has been shown
@@ -430,22 +431,6 @@ var ThreeDExperiment = function(expPhase) {
         addLights();
 
         createScene();
-
-        //Render upon resize
-        window.addEventListener('resize', function() {
-            var Width = window.innerWidth-100, Height = window.innerHeight-100;
-            webGLRenderer.setSize(Width, Height);
-            camera.aspect = Width / Height;
-            camera.updateProjectionMatrix();
-        });
-      
-        render();
-
-        // add DOM element to the page
-        document.getElementById("3dstuff").appendChild(webGLRenderer.domElement);
-        
-        // increment trial num
-        trialNum++;
     }
 
     function animate3D() {
@@ -540,12 +525,21 @@ var ThreeDExperiment = function(expPhase) {
         objGroup = new THREE.Group();
         loader = new THREE.OBJLoader();
 
+		var timeToLoadObj = (new Date()).getTime();
+
+		// add DOM element to the page
+        document.getElementById("3dstuff").appendChild(webGLRenderer.domElement);
+
 		// placed the loader in a wrapper function so that rotation doesn't start until the object is loaded. 
 		// This can be a problem on computers with slower connection or high cpu load. 
 		function createObjects() {
-
 	        loader.load("../static/images/objects/" + currStim.obj.file_name, 
 	        	function (object) {
+	        		// record time taken
+	        		timeToLoadObj = ((new Date()).getTime() - timeToLoadObj);
+	        		//console.log('obj loaded in ' + timeToLoadObj + ' milliseconds');
+	        		currStim.obj.load_time = timeToLoadObj;
+	        		
 	        		// on load - remove loader circle
 	        		document.getElementById("loader").setAttribute("style", "display: none");
 	        		
@@ -568,6 +562,40 @@ var ThreeDExperiment = function(expPhase) {
 					objGroup.add( stimMesh );
 					stimMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
 						-currStim.obj.center[0], -currStim.obj.center[1], -currStim.obj.center[2]));
+					
+					// add to scene
+					scene.add( objGroup );
+					
+			        // add dots to objGroup before we start transforming the object since that is easier
+			        // than trying to figure out the transformations to position the dots correctly
+			        // at a later time
+			        addDots();
+			                
+			        // rotate group - object with dots
+					objGroup.rotation.y = currStim.obj.rot_init_ang;
+					
+					if (debug_ON) {
+						// draw line for rotation reference
+						var lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
+						var lineGeometry = new THREE.Geometry();
+						lineGeometry.vertices.push(new THREE.Vector3(0, -100, 0));
+						lineGeometry.vertices.push(new THREE.Vector3(0, 100, 0));
+						var Line = new THREE.Line(lineGeometry,lineMaterial);
+						objGroup.add(Line);
+					}
+					
+			        //Render upon resize
+			        window.addEventListener('resize', function() {
+			            var Width = window.innerWidth-100, Height = window.innerHeight-100;
+			            webGLRenderer.setSize(Width, Height);
+			            camera.aspect = Width / Height;
+			            camera.updateProjectionMatrix();
+			        });
+			      
+			        render();
+			        
+			        // increment trial num
+			        trialNum++;
 	        	}, 
 	        	function (xhr) {
 	        		// fn to use during loading
@@ -577,36 +605,25 @@ var ThreeDExperiment = function(expPhase) {
 	        	}, 
 	        	function (error) {
 	        		// function to handle errors
-	        		console.log( 'An error happened: ' + error.message);
+	        		console.log('Error Loading 3D Object ' + currStim.obj.file_name + '\nError: ' + error.message);
 	        		
-	        		alert('Error Loading 3D Object: ' + error.message);
+	        		alert('Error Loading 3D Object ' + currStim.obj.file_name + '\nError: ' + error.message + '\n\nClick OK to skip this object and continue.');
+	        		
+	        		// retrying doesnt work
+					// if (confirm('Error Loading 3D Object ' + currStim.obj.file_name + '\nPress OK to Retry or CANCEL to Skip') == false) {
+					// 	createObjects();
+					// } else {
+					//   txt = "You pressed Cancel!";
+					// }
+					
+					// handle the error by skipping trial
+					skipTrial();
 	        	});
-
-        	return true;
 		}
 		
-		if (createObjects()) {
-			scene.add( objGroup );
-		}
-
-        // add dots to objGroup before we start transforming the object since that is easier
-        // than trying to figure out the transformations to position the dots correctly
-        // at a later time
-        addDots();
-                
-        // rotate group - object with dots
-		objGroup.rotation.y = currStim.obj.rot_init_ang;
-		
-		if (debug_ON) {
-			// draw line for rotation reference
-			var lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
-			var lineGeometry = new THREE.Geometry();
-			lineGeometry.vertices.push(new THREE.Vector3(0, -100, 0));
-			lineGeometry.vertices.push(new THREE.Vector3(0, 100, 0));
-			var Line = new THREE.Line(lineGeometry,lineMaterial);
-			objGroup.add(Line);
-		}
-    }
+		// repeat until success or user decides to cancel
+		createObjects();
+	}
 
 	function wait(ms){
 		var start = new Date().getTime();
@@ -701,7 +718,7 @@ var ThreeDExperiment = function(expPhase) {
         }
 	}
 
-	var storeData = function() {
+	var storeData = function(error = false) {
 		// when storing data we should store:
 		// - all properties of the currStim class
 		// - the reaction time (although not accurate to the ms it still provides info)
@@ -717,48 +734,102 @@ var ThreeDExperiment = function(expPhase) {
 			redPos = currStim.dots.r_pos;
 			greenPos = currStim.dots.g_pos;
 		}
-		
-		psiTurk.recordTrialData({'phase':expPhase, 
-			'trial':trialNum,
-			'stim_name':currStim.name, 
-			'stim_light_color':currStim.light,
-			'stim_rot_init_ang':currStim.obj.rot_init_ang, 
-			'stim_rot_init_dir':currStim.obj.rot_init_dir, 
-			'stim_rot_max_speed':currStim.obj.rot_max_speed,
-			'stim_rot_min_speed':currStim.obj.rot_min_speed,
-			'stim_rot_max_ang':currStim.obj.rot_max_ang,
-			'stim_good_size':currStim.obj.good_size,
-			'stim_distance':currStim.obj.distance,
-			'stim_file_name':currStim.obj.file_name,
-			'stim_tex_file_name':currStim.obj.tex_file_name,
-			'stim_mtl_shin':currStim.obj.mtl_shin,
-			'stim_rot_num_change_dir':currStim.obj.rot_num_change_dir,
-			'stim_center':currStim.obj.center,
-			'stim_size':currStim.obj.size,
-			'stim_scaling':currStim.obj.scaling,
-			'dots_green_pos':greenPos,
-			'dots_red_pos':redPos,
-			'dots_color_flipped':currStim.dots.color_flipped,
-			'dots_green_radius':currStim.dots.g_radius,
-			'dots_red_radius':currStim.dots.r_radius,
-			'dots_green_radius_big':currStim.dots.g_radius_big,
-			'dots_red_radius_big':currStim.dots.r_radius_big,
-			'dots_red_is_big':currStim.dots.r_is_big,
-			'dots_jitter_on':currStim.dots.jitter_on,
-			'dots_green_jitter':currStim.dots.g_jitter,
-			'dots_red_jitter':currStim.dots.r_jitter,
-			'dots_onset_degree':currStim.dots.onset_degree,
-			'resp_given':response,
-			'resp_correct':respCorrect,
-			'resp_reaction_time':reactionTimeEnd.getTime()-reactionTimeStart.getTime()
-		});
-
+		if (error) {
+			// store data in such a way that  - stimname with error marks skipped trial
+			// also resp-given = N and reaction time = -1
+			psiTurk.recordTrialData({'phase':expPhase, 
+				'trial':trialNum,
+				'stim_name':currStim.name+'-ERROR', 
+				'stim_light_color':currStim.light,
+				'stim_rot_init_ang':currStim.obj.rot_init_ang, 
+				'stim_rot_init_dir':currStim.obj.rot_init_dir, 
+				'stim_rot_max_speed':currStim.obj.rot_max_speed,
+				'stim_rot_min_speed':currStim.obj.rot_min_speed,
+				'stim_rot_max_ang':currStim.obj.rot_max_ang,
+				'stim_good_size':currStim.obj.good_size,
+				'stim_distance':currStim.obj.distance,
+				'stim_file_name':currStim.obj.file_name,
+				'stim_tex_file_name':currStim.obj.tex_file_name,
+				'stim_mtl_shin':currStim.obj.mtl_shin,
+				'stim_rot_num_change_dir':currStim.obj.rot_num_change_dir,
+				'stim_center':currStim.obj.center,
+				'stim_size':currStim.obj.size,
+				'stim_scaling':currStim.obj.scaling,
+				'stim_load_time':currStim.obj.load_time,
+				'dots_green_pos':greenPos,
+				'dots_red_pos':redPos,
+				'dots_color_flipped':currStim.dots.color_flipped,
+				'dots_green_radius':currStim.dots.g_radius,
+				'dots_red_radius':currStim.dots.r_radius,
+				'dots_green_radius_big':currStim.dots.g_radius_big,
+				'dots_red_radius_big':currStim.dots.r_radius_big,
+				'dots_red_is_big':currStim.dots.r_is_big,
+				'dots_jitter_on':currStim.dots.jitter_on,
+				'dots_green_jitter':currStim.dots.g_jitter,
+				'dots_red_jitter':currStim.dots.r_jitter,
+				'dots_onset_degree':currStim.dots.onset_degree,
+				'resp_given':'N',
+				'resp_correct':false,
+				'resp_reaction_time':-1
+			});
+		} else {
+			psiTurk.recordTrialData({'phase':expPhase, 
+				'trial':trialNum,
+				'stim_name':currStim.name, 
+				'stim_light_color':currStim.light,
+				'stim_rot_init_ang':currStim.obj.rot_init_ang, 
+				'stim_rot_init_dir':currStim.obj.rot_init_dir, 
+				'stim_rot_max_speed':currStim.obj.rot_max_speed,
+				'stim_rot_min_speed':currStim.obj.rot_min_speed,
+				'stim_rot_max_ang':currStim.obj.rot_max_ang,
+				'stim_good_size':currStim.obj.good_size,
+				'stim_distance':currStim.obj.distance,
+				'stim_file_name':currStim.obj.file_name,
+				'stim_tex_file_name':currStim.obj.tex_file_name,
+				'stim_mtl_shin':currStim.obj.mtl_shin,
+				'stim_rot_num_change_dir':currStim.obj.rot_num_change_dir,
+				'stim_center':currStim.obj.center,
+				'stim_size':currStim.obj.size,
+				'stim_scaling':currStim.obj.scaling,
+				'stim_load_time':currStim.obj.load_time,
+				'dots_green_pos':greenPos,
+				'dots_red_pos':redPos,
+				'dots_color_flipped':currStim.dots.color_flipped,
+				'dots_green_radius':currStim.dots.g_radius,
+				'dots_red_radius':currStim.dots.r_radius,
+				'dots_green_radius_big':currStim.dots.g_radius_big,
+				'dots_red_radius_big':currStim.dots.r_radius_big,
+				'dots_red_is_big':currStim.dots.r_is_big,
+				'dots_jitter_on':currStim.dots.jitter_on,
+				'dots_green_jitter':currStim.dots.g_jitter,
+				'dots_red_jitter':currStim.dots.r_jitter,
+				'dots_onset_degree':currStim.dots.onset_degree,
+				'resp_given':response,
+				'resp_correct':respCorrect,
+				'resp_reaction_time':reactionTimeEnd.getTime()-reactionTimeStart.getTime()
+			});
+		}
 		psiTurk.saveData();
 	}
 
-	var next = function() {
-		// remove textual confirmation
-		if (expPhase == 'part1') document.getElementById("3dstuff").removeChild(responseDiv);
+	var skipTrial = function() {
+		// a function to handle the condition that sometimes an object may not load and will throw an error
+		// we need to know what to do 
+		
+		// increment trial num
+		trialNum++;
+		
+		// store data - let know error = true
+		storeData(true);
+
+		next(true);
+	}
+
+	var next = function(error = false) {
+		if (!error) {
+			// remove textual confirmation
+			if (expPhase == 'part1') document.getElementById("3dstuff").removeChild(responseDiv);
+		}
 		
 	    // remove old dom element 
 	    document.getElementById("3dstuff").removeChild(webGLRenderer.domElement); 

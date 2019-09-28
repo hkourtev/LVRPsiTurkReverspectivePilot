@@ -80,6 +80,7 @@ experiment = {'unique_id' : [], \
 	'stim_center' : [], \
 	'stim_size' : [], \
 	'stim_scaling' : [], \
+	'stim_load_time' : [], \
 	'dots_green_pos' : [], \
 	'dots_red_pos' : [], \
 	'dots_color_flipped' : [], \
@@ -104,7 +105,7 @@ for uid in df['uniqueid'].unique():
 		'stim_name', 'stim_light_color', 'stim_rot_init_ang', 'stim_rot_init_dir', \
 		'stim_rot_max_speed', 'stim_rot_min_speed', 'stim_rot_max_ang', 'stim_good_size', \
 		'stim_distance', 'stim_file_name', 'stim_tex_file_name', 'stim_mtl_shin', \
-		'stim_rot_num_change_dir', 'stim_center', 'stim_size', 'stim_scaling', \
+		'stim_rot_num_change_dir', 'stim_center', 'stim_size', 'stim_scaling', 'stim_load_time', \
 		'dots_green_pos', 'dots_red_pos', 'dots_color_flipped', 'dots_green_radius', \
 		'dots_red_radius', 'dots_green_radius_big', 'dots_red_radius_big', \
 		'dots_red_is_big', 'dots_jitter_on', 'dots_green_jitter', 'dots_red_jitter', \
@@ -129,6 +130,7 @@ for uid in df['uniqueid'].unique():
 		experiment['stim_rot_num_change_dir'].append(tmpExperiment['stim_rot_num_change_dir'][e])
 		experiment['stim_center'].append(tmpExperiment['stim_center'][e])
 		experiment['stim_size'].append(tmpExperiment['stim_size'][e])
+		experiment['stim_load_time'].append(tmpExperiment['stim_load_time'][e])
 		experiment['stim_scaling'].append(tmpExperiment['stim_scaling'][e])
 		experiment['dots_green_pos'].append(tmpExperiment['dots_green_pos'][e])
 		experiment['dots_red_pos'].append(tmpExperiment['dots_red_pos'][e])
@@ -156,7 +158,7 @@ experimentDF = pd.DataFrame(experiment, columns=['unique_id', 'phase', 'trial', 
 		'dots_green_pos', 'dots_red_pos', 'dots_color_flipped', 'dots_green_radius', \
 		'dots_red_radius', 'dots_green_radius_big', 'dots_red_radius_big', \
 		'dots_red_is_big', 'dots_jitter_on', 'dots_green_jitter', 'dots_red_jitter', \
-		'dots_onset_degree', 'resp_given', 'resp_correct', 'resp_reaction_time'])
+		'dots_onset_degree', 'resp_given', 'resp_correct', 'resp_reaction_time', 'stim_load_time'])
 
 # export data to csv files
 experimentDF.to_csv('trial_data.csv')
