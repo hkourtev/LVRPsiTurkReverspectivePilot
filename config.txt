@@ -13,7 +13,7 @@ browser_exclude_rule = MSIE, mobile, tablet
 allow_repeats = false
 
 [Database Parameters]
-database_url = sqlite:///participants-attila-john.db
+database_url = sqlite:///participants-new-quest-testing-2.db
 table_name = reverspective_pilot
 
 [Server Parameters]

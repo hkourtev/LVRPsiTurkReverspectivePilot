@@ -15,6 +15,10 @@ var mycounterbalance = counterbalance;  // they tell you which condition you hav
 var pages = [
 	"instructions/instruct-1.html",
 	"instructions/instruct-1-pdi.html",
+	"instructions/instruct-1-tas.html",
+	"instructions/instruct-1-cds.html",
+	"instructions/instruct-1-lshs.html",
+	"instructions/instruct-1-avaq.html",
 	"instructions/instruct-2.html",
 	"instructions/instruct-3.html",
 //	"instructions/instruct-4.html",
@@ -28,15 +32,32 @@ var pages = [
 	"getOtherRules.html",
 	"getRuleA.html",
 	"getRuleB.html",
-	"pdiquestionnaire.html",
+	"lshs-questionnaire.html",
+	"tas-questionnaire.html",
+	"cds-questionnaire.html",
+	"avaq-questionnaire.html",
+//	"pdiquestionnaire.html",
 	"theend.html"
 ];
 
 psiTurk.preloadPages(pages);
 
-var instructionPages0 = [ // add as a list as many pages as you like
+var instructionPages0tas = [ // add as a list as many pages as you like
 	"instructions/instruct-1.html",
-	"instructions/instruct-1-pdi.html"
+//	"instructions/instruct-1-pdi.html",
+	"instructions/instruct-1-tas.html"
+	];
+	
+var instructionPages0cds = [ // add as a list as many pages as you like
+	"instructions/instruct-1-cds.html"	
+	];
+
+var instructionPages0lshs = [ // add as a list as many pages as you like
+	"instructions/instruct-1-lshs.html"
+	];
+	
+var instructionPages0avaq = [ // add as a list as many pages as you like
+	"instructions/instruct-1-avaq.html"	
 	];
 
 var instructionPages1 = [ // add as a list as many pages as you like
@@ -141,7 +162,8 @@ var ThreeDExperiment = function(expPhase) {
     var debug_ON = false; camViewFromTop = false;
     
     // number of trials parameters MAKE SURE 2a trials == 2*number of stimuli
-	var maxNumTrialsPart1 = 100, corrNumTrialsPart1 = 8, numTrialsPart2a = 32, numTrialsPart2b = 8;
+	//var maxNumTrialsPart1 = 100, corrNumTrialsPart1 = 8, numTrialsPart2a = 32, numTrialsPart2b = 8;
+	var maxNumTrialsPart1 = 10, corrNumTrialsPart1 = 8, numTrialsPart2a = 8, numTrialsPart2b = 8;
 
 	// create stimuli
 	
@@ -1109,7 +1131,7 @@ var OtherRules = function() {
 };
 
 /****************
-* Questionnaire *
+* PDI Questionnaire *
 ****************/
 var Questionnaire = function() {
 	
@@ -1367,6 +1389,523 @@ var Questionnaire = function() {
 };
 
 /****************
+* TAS Questionnaire *
+****************/
+var TASQuestionnaire = function() {
+	
+	var q = ["While watching a movie, a TV show, or a play, I may become so involved that I may forget about myself and my surroundings and experience the story as if it were real and as if I were taking part in it.", 
+		"If I stare at a picture and then look away from it, I can sometimes \"see\" an image of the picture almost as if I were still looking at it.",
+		"I like to watch cloud shapes change in the sky.", 
+		"If I wish I can imagine (or daydream) some things so vividly that they hold my attention as a good movie or story does.", 
+		"When I listen to music I can get so caught up in it that I don't notice anything else.", 
+		"The crackle and flames of a wood fire stimulate my imagination.",
+		"It is sometimes possible for me to be completely immersed in nature or in art and to feel as if my whole state of consciousness has somehow been temporarily altered.", 
+		"I am able to wander off into my thoughts while doing a routine task and actually forget that I am doing the task, and then find a few minutes later that I have completed it.", 
+		"I can sometimes recollect certain past experiences in my life with such clarity and vividness that it is like living them again or almost so.",
+		"My thoughts often don't occur as words but as visual images.",
+		"Sometimes I can change noise into music by the way I listen to it.", 
+		"Some music reminds me of pictures or changing color patterns.",
+		"I often have \"physical memories\"; for example, after I have been swimming I may still feel as if I am in the water.", 
+		"The sound of a voice can be so fascinating to me that I can just go on listening to it.", 
+		"Sometimes thoughts and images come to me without the slightest effort on my part."];
+	
+	var next = function() {
+		psiTurk.doInstructions(
+        	// instructionPages1, // a list of pages you want to display in sequence
+        	// function() { currentview = new ThreeDExperiment('part1'); } // what you want to do when you are done with instructions
+        	instructionPages0cds, // a list of pages you want to display in sequence
+        	function() { currentview = new CDSQuestionnaire(); } // what you want to do when you are done with instructions
+    	);
+	};
+	
+	var show_next = function() {
+		d3.select("#button_container")
+			.append("button")
+			.attr("id","next")
+			.attr("value","next")
+			.attr("class","btn btn-primary btn-lg continue")
+			.attr("style","text-align:right;")
+			.html("Continue <span class='glyphicon glyphicon-arrow-right'></span>")
+			.on("click", process_data);
+	}
+	
+	var remove_next = function() {
+		d3.select("#next").remove();
+	}
+	
+	var process_data = function() {
+		var q_objs = [];
+		var q_ans = [];
+		var curr_q_ans = [];
+		
+		// loop through all questions
+		for (var g=0; g<q.length; g++) {
+			// init array
+			curr_q_ans = [];
+			
+			q_objs[0] = document.getElementsByName("answer" + g);
+			
+			for (var i=0; i<q_objs[0].length; i++) {
+				if (q_objs[0][i].checked) curr_q_ans = q_objs[0][i].value;
+			}
+				
+			if (curr_q_ans.length == 0) {
+				alert("Please answer question " + eval(g+1) + " and try again.");
+				return;
+			}
+			
+			if (curr_q_ans == "yes") {
+				q_ans[g] = 1;
+			} else {
+				q_ans[g] = 0;
+			} 
+		}
+		
+		// store data 
+		var tmpData = {};
+		tmpData['phase'] = "tas";
+		for (var uu=0; uu<q_ans.length; uu++) {
+			tmpData['tas_q_' + eval(uu+1)] = q_ans[uu];
+		}
+		psiTurk.recordTrialData(tmpData);
+		psiTurk.saveData();
+
+		next();
+	}
+	
+	var display_questions = function() {
+		for (var h=0; h<q.length; h++) {
+			add_q(h);
+		}
+	}
+	
+	var add_q = function(q_num) {
+		// add container
+		if (q_num > 0) {
+			d3.select("#pagebody")
+				.append("hr");
+		}
+		
+		d3.select("#pagebody")
+			.append("div")
+			.attr("id","q" + q_num)
+			.attr("style", "display:flex;")
+			.html("<table width='900' border='0' cellpadding='5' style='text-align: left; float: left; clear: right; margin-right: 10px;'> \
+  <tr valign='top'> \
+    <td>" + eval(q_num+1) + " - " + q[q_num] + "</td> \
+    <td align='center' width='100'><label for='answer" + q_num + "yes' id='answer" + q_num + "yes-label'>TRUE</label><br /> \
+    <input type='radio' name='answer" + q_num + "' id='answer" + q_num + "yes' value='yes' /></td> \
+	<td align='center' width='100'><label for='answer" + q_num + "no' id='answer" + q_num + "no-label'>FALSE</label><br /> \
+    <input type='radio' name='answer" + q_num + "' id='answer" + q_num + "no' value='no' /></td> \
+  </tr> \
+</table>");
+	}
+
+	var remove_q = function(q_num) {
+		d3.select("#q" + q_num).remove();
+	};
+	
+	//psiTurk.recordTrialData({'phase':'pdiquestionnaire','status':'begin'});
+   	psiTurk.showPage('tas-questionnaire.html');
+
+	display_questions();
+	show_next();
+};
+
+/****************
+* LSHS Questionnaire *
+****************/
+var LSHSQuestionnaire = function() {
+	
+	var q = [" No matter how hard I try to concentrate, unrelated thoughts always creep into my mind",
+		"In my daydreams I can hear the sound of a tune almost as clearly as if I were actually listening to it.", 
+		"Sometimes my thoughts seem as real as actual events in my life.",
+		"Sometimes a passing thought will seem so real that it frightens me.",
+		"The sounds I hear in my daydreams are generally clear and distinct.",
+		"The people in my daydreams seem so true to life that sometimes I think they are.",
+		"I often hear a voice speaking my thoughts aloud.",
+		"In the past, I have had the experience of hearing a person’s voice and then found that no-one was there.",
+		"On occasions, I have seen a person’s face in front of me when no-one was in fact there.",
+		"I have heard the voice of the Devil.",
+		"In the past, I have heard the voice of God speaking to me.",
+		"I have been troubled by hearing voices in my head."];
+	
+	var next = function() {
+		psiTurk.doInstructions(
+        	instructionPages0avaq, // a list of pages you want to display in sequence
+        	function() { currentview = new AVAQQuestionnaire(); } // what you want to do when you are done with instructions
+    	);
+	};
+	
+	var show_next = function() {
+		d3.select("#button_container")
+			.append("button")
+			.attr("id","next")
+			.attr("value","next")
+			.attr("class","btn btn-primary btn-lg continue")
+			.attr("style","text-align:right;")
+			.html("Continue <span class='glyphicon glyphicon-arrow-right'></span>")
+			.on("click", process_data);
+	}
+	
+	var remove_next = function() {
+		d3.select("#next").remove();
+	}
+	
+	var process_data = function() {
+		var q_objs = [];
+		var q_ans = [];
+		var curr_q_ans = [];
+		
+		// loop through all questions
+		for (var g=0; g<q.length; g++) {
+			// init array
+			curr_q_ans = [];
+			
+			q_objs[0] = document.getElementsByName("answer" + g);
+			
+			for (var i=0; i<q_objs[0].length; i++) {
+				if (q_objs[0][i].checked) curr_q_ans = q_objs[0][i].value;
+			}
+				
+			if (curr_q_ans.length == 0) {
+				alert("Please answer question " + eval(g+1) + " and try again.");
+				return;
+			}
+			
+			q_ans[g] = curr_q_ans;
+		}
+		
+		// store data 
+		var tmpData = {};
+		tmpData['phase'] = "lshs";
+		for (var uu=0; uu<q_ans.length; uu++) {
+			tmpData['lshs_q_' + eval(uu+1)] = q_ans[uu];
+		}
+		psiTurk.recordTrialData(tmpData);
+		psiTurk.saveData();
+
+		next();
+	}
+	
+	var display_questions = function() {
+		for (var h=0; h<q.length; h++) {
+			add_q(h);
+		}
+	}
+	
+	var add_q = function(q_num) {
+		// add container
+		if (q_num > 0) {
+			d3.select("#pagebody")
+				.append("hr");
+		}
+		
+		d3.select("#pagebody")
+			.append("div")
+			.attr("id","q" + q_num)
+			.attr("style", "display:flex;")
+			.html("<table width='900' border='0' cellpadding='5' style='text-align: left; float: left; clear: right;'> \
+  <tr valign='top'> \
+    <td width='385'>" + eval(q_num+1) + " - " + q[q_num] + "</td> \
+    <td align='center'><label for='answer" + q_num + "certainly' id='answer" + q_num + "certainly-label'>CERTAINLY YES</label><br /> \
+    <input type='radio' name='answer" + q_num + "' id='answer" + q_num + "certainly' value='4' /></td> \
+    <td align='center'><label for='answer" + q_num + "possiblyyes' id='answer" + q_num + "possiblyyes-label'>POSSIBLY YES</label><br /> \
+    <input type='radio' name='answer" + q_num + "' id='answer" + q_num + "possiblyyes' value='3' /></td> \
+    <td align='center'><label for='answer" + q_num + "unsure' id='answer" + q_num + "unsure-label'>NOT SURE</label><br /> \
+    <input type='radio' name='answer" + q_num + "' id='answer" + q_num + "unsure' value='2' /></td> \
+    <td align='center'><label for='answer" + q_num + "possiblyno' id='answer" + q_num + "possiblyno-label'>POSSIBLY NO</label><br /> \
+    <input type='radio' name='answer" + q_num + "' id='answer" + q_num + "possiblyno' value='1' /></td> \
+    <td align='center'><label for='answer" + q_num + "no' id='answer" + q_num + "no-label'>CERTAINLY NOT</label><br /> \
+    <input type='radio' name='answer" + q_num + "' id='answer" + q_num + "no' value='0' /></td> \
+  </tr> \
+</table>");
+	}
+
+	var remove_q = function(q_num) {
+		d3.select("#q" + q_num).remove();
+	};
+	
+	//psiTurk.recordTrialData({'phase':'pdiquestionnaire','status':'begin'});
+   	psiTurk.showPage('lshs-questionnaire.html');
+
+	display_questions();
+	show_next();
+};
+
+/****************
+* AVAQ Questionnaire *
+****************/
+var AVAQQuestionnaire = function() {
+	
+	var q = ["Objects appear to be too bright.",
+		"I see flashes of bright light, stars, flames, or spots of varying shapes.",
+		"When I see objects, I can see their parts, but those parts do not seem to fit together.",
+		"When looking in the mirror, I know it is my face, but for some reason, my facial features look deformed.",
+		"When I am looking at a person I know, the coloring of their skin, eyes, or hair appears different.",
+		"My body looks like it is deformed even though I know it is not.",
+		"When I see myself in the mirror, my body looks like it is not mine.",
+		"Other people seem to have oddly shaped bodies.",
+		"Everything seems so far away, as if it were way off in the distance.",
+		"Objects seem to be especially small, like they are small replicas of reality, but not the real thing.",
+		"Objects look like they are jumbo sized or too big, as if they were shown in a magnifying glass",
+		"Things can appear lopsided, with one side bigger and one side smaller than they really are.",
+		"Straight or smoothly curved lines appear wavy.",
+		"Objects appear to be slanted or crooked, even when they do not actually have this property.",
+		"I continue to see patterns or objects long after they are not there anymore.",
+		"Objects appear to move, as if there were a very mild earthquake that slightly shook everything back and forth.",
+		"The whole world seems like it is moving in slow motion.",
+		"I have double or triple vision, where I see the world repeated multiple times.",
+		"Colors seem paler or more washed out than usual.",
+		"Colors seem to be more intense or brighter than usual."];
+	
+	var next = function() {
+		psiTurk.doInstructions(
+        	instructionPages1, // a list of pages you want to display in sequence
+        	function() { currentview = new ThreeDExperiment('part1'); } // what you want to do when you are done with instructions
+    	);
+	};
+	
+	var show_next = function() {
+		d3.select("#button_container")
+			.append("button")
+			.attr("id","next")
+			.attr("value","next")
+			.attr("class","btn btn-primary btn-lg continue")
+			.attr("style","text-align:right;")
+			.html("Continue <span class='glyphicon glyphicon-arrow-right'></span>")
+			.on("click", process_data);
+	}
+	
+	var remove_next = function() {
+		d3.select("#next").remove();
+	}
+	
+	var process_data = function() {
+		var q_objs = [];
+		var q_ans = [];
+		var curr_q_ans = [];
+		
+		// loop through all questions
+		for (var g=0; g<q.length; g++) {
+			// init array
+			curr_q_ans = [];
+			
+			q_objs[0] = document.getElementsByName("answer" + g);
+			
+			for (var i=0; i<q_objs[0].length; i++) {
+				if (q_objs[0][i].checked) curr_q_ans = q_objs[0][i].value;
+			}
+				
+			if (curr_q_ans.length == 0) {
+				alert("Please answer question " + eval(g+1) + " and try again.");
+				return;
+			}
+			
+			q_ans[g] = curr_q_ans;
+		}
+		
+		// store data 
+		var tmpData = {};
+		tmpData['phase'] = "avaq";
+		for (var uu=0; uu<q_ans.length; uu++) {
+			tmpData['avaq_q_' + eval(uu+1)] = q_ans[uu];
+		}
+		psiTurk.recordTrialData(tmpData);
+		psiTurk.saveData();
+
+		next();
+	}
+	
+	var display_questions = function() {
+		for (var h=0; h<q.length; h++) {
+			add_q(h);
+		}
+	}
+	
+	var add_q = function(q_num) {
+		// add container
+		if (q_num > 0) {
+			d3.select("#pagebody")
+				.append("hr");
+		}
+		
+		d3.select("#pagebody")
+			.append("div")
+			.attr("id","q" + q_num)
+			.attr("style", "display:flex;")
+			.html("<table width='900' border='0' cellpadding='5' style='text-align: left; float: left; clear: right; margin-right: 50px;'> \
+  <tr valign='top'> \
+    <td width='450'>" + eval(q_num+1) + " - " + q[q_num] + "</td> \
+    <td align='center'><label for='answer" + q_num + "never' id='answer" + q_num + "never-label'>NEVER</label><br /> \
+    <input type='radio' name='answer" + q_num + "' id='answer" + q_num + "never' value='0' /></td> \
+    <td align='center'><label for='answer" + q_num + "sometimes' id='answer" + q_num + "sometimes-label'>SOMETIMES</label><br /> \
+    <input type='radio' name='answer" + q_num + "' id='answer" + q_num + "sometimes' value='1' /></td> \
+    <td align='center'><label for='answer" + q_num + "often' id='answer" + q_num + "often-label'>OFTEN</label><br /> \
+    <input type='radio' name='answer" + q_num + "' id='answer" + q_num + "often' value='2' /></td> \
+    <td align='center'><label for='answer" + q_num + "always' id='answer" + q_num + "always-label'>NEARLY ALWAYS</label><br /> \
+    <input type='radio' name='answer" + q_num + "' id='answer" + q_num + "always' value='3' /></td> \
+  </tr> \
+</table>");
+	}
+
+	var remove_q = function(q_num) {
+		d3.select("#q" + q_num).remove();
+	};
+	
+	//psiTurk.recordTrialData({'phase':'pdiquestionnaire','status':'begin'});
+   	psiTurk.showPage('avaq-questionnaire.html');
+
+	display_questions();
+	show_next();
+};
+
+/****************
+* CDS Questionnaire *
+****************/
+var CDSQuestionnaire = function() {
+	
+	var q = ["Out of the blue, I feel strange, as if I were not real or as if I were cut off from the world.", 
+		"What I see looks ‘flat’ or as if I were looking at a picture.", 
+		"Parts of my body feel as if they didn’t belong to me.", 
+		"While doing something I have the feeling of being a ‘detached observer’ of myself.", 
+		"I have the feeling of <i>not having any thoughts at all</i>, so that when I speak it feels as if my words were being uttered by an ‘automaton’.",
+		"Familiar voices (including my own) sound remote and unreal.", 
+		"My surroundings feel detached or unreal, as if there were a veil between me and the outside world.",
+		"I cannot feel properly the objects that I touch with my hands for it feels <i>as if it were not me</i> who were touching it.",
+		"I have the feeling of being outside my body.", 
+		"When I move it doesn’t feel as if I were in charge of the movements, so that I feel ‘automatic’ & mechanical as if I were a ‘robot’.",
+		"I have to touch myself to make sure that I have a body or a real existence."
+];
+
+	var next = function() {
+		psiTurk.doInstructions(
+        	instructionPages0lshs, // a list of pages you want to display in sequence
+        	function() { currentview = new LSHSQuestionnaire(); } // what you want to do when you are done with instructions
+    	);
+	};
+	
+	var show_next = function() {
+		d3.select("#button_container")
+			.append("button")
+			.attr("id","next")
+			.attr("value","next")
+			.attr("class","btn btn-primary btn-lg continue")
+			.attr("style","text-align:right;")
+			.html("Continue <span class='glyphicon glyphicon-arrow-right'></span>")
+			.on("click", process_data);
+	}
+	
+	var remove_next = function() {
+		d3.select("#next").remove();
+	}
+	
+	var process_data = function() {
+		var q_objs = [];
+		var q_ans = [];
+		var curr_q_ans = [];
+		var sel_idx = [];
+		
+		// loop through all questions
+		for (var g=0; g<q.length; g++) {
+			
+			// reinit array
+			curr_q_ans = [];
+		
+			// frequency 
+			q_objs = document.getElementsByName("answerF" + g);
+			sel_idx = q_objs[0].selectedIndex;
+			
+			if (sel_idx == 0) {
+				alert("Please answer question " + eval(g+1) + " (frequency part) and try again.");
+				return;
+			} else {
+				curr_q_ans[0] = q_objs[0].options[sel_idx].value;
+			}
+
+			// duration
+			q_objs = document.getElementsByName("answerD" + g);
+			sel_idx = q_objs[0].selectedIndex;
+			
+			if (sel_idx == 0) {
+				alert("Please answer question " + eval(g+1) + " (duration part) and try again.");
+				return;
+			} else {
+				curr_q_ans[1] = q_objs[0].options[sel_idx].value;
+			}
+			
+			q_ans[g] = curr_q_ans;
+		}
+		
+		// store data 
+		var tmpData = {};
+		tmpData['phase'] = "cds";
+		for (var uu=0; uu<q_ans.length; uu++) {
+			tmpData['cds_q_' + eval(uu+1)] = q_ans[uu];
+		}
+		psiTurk.recordTrialData(tmpData);
+		psiTurk.saveData();
+
+		next();
+	}
+	
+	var display_questions = function() {
+		for (var h=0; h<q.length; h++) {
+			add_q(h);
+			//add_optional(h);
+		}
+	}
+	
+	var add_q = function(q_num) {
+		// add container
+		if (q_num > 0) {
+			d3.select("#pagebody")
+				.append("hr");
+		}
+		
+		d3.select("#pagebody")
+			.append("div")
+			.attr("id","q" + q_num)
+			.attr("style", "display:flex;")
+			.html("<table width='900' border='0' cellpadding='5' style='text-align: left; float: left; clear: right;'> \
+  <tr valign='top'> \
+    <td width='350'>" + eval(q_num+1) + " - " + q[q_num] + "</td> \
+    <td align='center'><b>Frequency</b><br /> \
+    <select name='answerF" + q_num + "' id='answerF" + q_num + "' /> \
+    <option value='-1'>--</option> \
+    <option value='0'>0 - Never</option> \
+    <option value='1'>1 - Rarely</option> \
+    <option value='2'>2 - Often</option> \
+    <option value='3'>3 - Very Often</option> \
+    <option value='4'>4 - All the Time</option> \
+    </select></td> \
+    <td align='center'><b>Duration</b><br /> \
+    <select name='answerD" + q_num + "' id='answerD" + q_num + "' /> \
+    <option value='-1'>--</option> \
+    <option value='1'>1 - Few Seconds</option> \
+    <option value='2'>2 - Few Minutes</option> \
+    <option value='3'>3 - Few Hours</option> \
+    <option value='4'>4 - About a Day</option> \
+    <option value='5'>5 - More Than a Day</option> \
+    <option value='6'>6 - More Than a Week</option> \
+    </select></td> \
+  </tr> \
+</table>");
+	}
+
+	var remove_q = function(q_num) {
+		d3.select("#q" + q_num).remove();
+	};
+	
+	
+	//psiTurk.recordTrialData({'phase':'pdiquestionnaire','status':'begin'});
+   	psiTurk.showPage('cds-questionnaire.html');
+
+	display_questions();
+	show_next();
+};
+
+/****************
 * THE END *
 ****************/
 
@@ -1434,8 +1973,8 @@ var currentview;
  ******************/
 $(window).load( function(){
     psiTurk.doInstructions(
-    	instructionPages0, // a list of pages you want to display in sequence
+    	instructionPages0tas, // a list of pages you want to display in sequence
     	//function() { currentview = new ThreeDExperiment('part1'); } // what you want to do when you are done with instructions
-    	function() { currentview = new Questionnaire(); } // what you want to do when you are done with instructions
+    	function() { currentview = new TASQuestionnaire(); } // what you want to do when you are done with instructions
     );
 });
